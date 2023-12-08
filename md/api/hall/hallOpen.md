@@ -17,7 +17,7 @@
 ```javascript
 const params = new FormData()
 params.set('hallOpen', '1')
-fetch( 'https://shfe-diplom.netoserver.ru/open/34', {
+fetch( 'https://shfe-diplom.neto-server.ru/open/34', {
     method: 'POST',
     body: params 
 })

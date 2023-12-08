@@ -15,7 +15,7 @@
 ```javascript
 const params = new FormData()
 params.set('hallName', 'Достоевский')
-fetch( 'https://shfe-diplom.netoserver.ru/hall', {
+fetch( 'https://shfe-diplom.neto-server.ru/hall', {
     method: 'POST',
     body: params 
 })

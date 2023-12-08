@@ -3,13 +3,13 @@
 ## Основные концепции
 
 Обратите внимание, все запросы вам необходимо совершать по основному адресу API:
-*https://shfe-diplom.netoserver.ru/*. Например:
+*https://shfe-diplom.neto-server.ru/*. Например:
 
 ```js
-fetch( 'https://shfe-diplom.netoserver.ru/alldata' )
+fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
     .then( response => response.json())
     .then( console.log );
-```
+```§
 
 Ответ по всем доступным адресам API предоставляется в формате JSON и имеет вид
 ```javascript  

@@ -8,7 +8,7 @@ _**Возвращает**_ список всех существующих кин
 ## Пример
 
 ```javascript
-fetch( 'https://shfe-diplom.netoserver.ru/alldata' )
+fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
     .then( response => response.json())
     .then( data => console.log( data ));
 ```

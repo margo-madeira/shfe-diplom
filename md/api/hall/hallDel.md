@@ -15,7 +15,7 @@
 ## Пример
 
 ```javascript
-fetch( 'https://shfe-diplom.netoserver.ru/hall/34', {
+fetch( 'https://shfe-diplom.neto-server.ru/hall/34', {
     method: 'DELETE',
 })
     .then( response => response.json())

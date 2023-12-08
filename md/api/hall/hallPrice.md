@@ -17,7 +17,7 @@
 const params = new FormData()
 params.set('priceStandart', '100')
 params.set('priceVip', '300')
-fetch( 'https://shfe-diplom.netoserver.ru/price/34', {
+fetch( 'https://shfe-diplom.neto-server.ru/price/34', {
     method: 'POST',
     body: params 
 })

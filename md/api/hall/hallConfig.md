@@ -25,7 +25,7 @@ const params = new FormData()
 params.set('rowCount', '10')
 params.set('placeCount', '10')
 params.set('config', JSON.strigify(arrayConfig))
-fetch( 'https://shfe-diplom.netoserver.ru/hall/34', {
+fetch( 'https://shfe-diplom.neto-server.ru/hall/34', {
     method: 'POST',
     body: params 
 })

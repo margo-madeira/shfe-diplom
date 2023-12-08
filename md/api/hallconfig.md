@@ -13,7 +13,7 @@
 ## Пример
 
 ```javascript
-fetch( 'https://shfe-diplom.netoserver.ru/hallconfig?seanceId=34&date=2023-12-01' )
+fetch( 'https://shfe-diplom.neto-server.ru/hallconfig?seanceId=34&date=2023-12-01' )
     .then( response => response.json())
     .then( data => console.log( data ));
 ```
