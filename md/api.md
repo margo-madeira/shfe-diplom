@@ -26,7 +26,7 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
 }  
 ```
 Слева от каждого адреса располагается метод запроса: ![GET](api/img/get.svg), ![POST](api/img/post.svg) или ![DELETE](api/img/delete.svg).
-Справа - адрес запроса относительно хоста (*https://shfe-diplom.netoserver.ru/*).
+Справа - адрес запроса относительно хоста (*https://shfe-diplom.neto-server.ru/*).
 
 Для передачи данных через ![POST](api/img/post.svg) запросы можете воспользоваться объектом [FormData](https://developer.mozilla.org/ru/docs/Web/API/FormData)
 
