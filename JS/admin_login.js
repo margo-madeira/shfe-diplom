@@ -16,7 +16,7 @@ form.addEventListener('submit', (e) => {
                 console.log(data);
 
                 if(data.success === true) {
-                    document.location='../index/admin_index.html';
+                    document.location='./admin_index.html';
                 }
                 if(data.success === false){
                     alert("Неверный логин/пароль");

@@ -63,6 +63,6 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
             .then( function(data) {
                 console.log(data);  
         })  
-        document.location='../index/client_ticket.html';
+        document.location='./client_ticket.html';
     })
 })

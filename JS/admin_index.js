@@ -31,6 +31,99 @@ const btnFilmSeanseSave = document.querySelector(".save_seanse_film");
 const deleteFilmSeanse = document.querySelector(".delete_film_seanse");
 const deleteSeances = document.querySelector(".delete__seances");
 
+//popup доб зала
+const inp = document.querySelector(".row__text");
+const btnAdd = document.querySelector(".btn__add_hall");
+const btnRemove = document.querySelector(".btn__white");
+const closeBtn = document.querySelector(".close_popup_seans");
+const form = document.querySelector(".form_addfilm");
+const addHall = document.querySelector(".hall");
+
+//popup доб фильм
+const btnClose = document.querySelector(".close_popup");
+const btnAddsFilm = document.querySelector(".save__film");
+const btnCancel = document.querySelector(".cancel");
+const filmContainer = document.querySelector(".film");
+const formAddfilm = document.querySelector(".form_addfilm");
+let file;
+const filmName = document.querySelector(".filmname");
+const filmDuration = document.querySelector(".filmtime");
+const filmDescription = document.querySelector(".description");
+const filmOrigin = document.querySelector(".origin");
+
+//popup доб сеанс
+const btnCloseSeanse = document.querySelector(".close__addfilm_seanse");
+const contSeans = document.querySelector(".seans");
+const formSeans = document.querySelector(".form_addfilm_seans");
+const cancelSeanse = document.querySelector(".btn__addfilm_cancel");
+const filmNameSeanse = document.querySelector(".select__addseans_film");
+const hallNameSeanse = document.querySelector(".select__addseans_hall");
+const timeNameSeanse = document.querySelector('.select_time');
+const btnAdds = document.querySelector(".btn__addfilm_adds");
+let arrr = [];//дублирует все сеансы
+let arrForTime = [];
+let checkFilmDuration;
+let resultForTime = [];
+let diffrens;
+let result;
+let checkedIdHall;
+let checkedIdfilm;
+let checkedTime;
+let countOfTime = 0;
+let timeCount = 1;
+let resultHour;
+let resultMin;
+let checkedIdfilmName;
+let searchDuration;
+let firstSeans;
+let firstSeansInMin;
+
+//popup удал сеанса
+const closeDelSeans = document.querySelector(".close_del_seans");
+const containerDelSeans = document.querySelector(".delete__seances");
+const labelFilm = document.querySelector(".label_delete__seanse");
+let nameOfFilms = localStorage.getItem('name');
+const delSeans = document.querySelector(".del_seans");
+const delSeansCancel = document.querySelector(".del_seans_cancel");
+let checkDel;
+
+//клик по закрыть в popup зал
+closeBtn.addEventListener('click', () => {
+  addHall.classList.remove("container__addfilm_active");  
+})
+//клик отменить в popup зал
+btnRemove.addEventListener('click', () => {
+  controller.abort();
+  form.reset();
+})
+
+//клик по добавить зал
+btnAdd.addEventListener('click', (e) => {
+  const formData = new FormData();
+  formData.set('hallName', `${inp.value}`)
+  if(inp.value.trim()) {
+    fetch( 'https://shfe-diplom.neto-server.ru/hall',{
+      method: 'POST',
+      body: formData
+    })
+      .then( response => response.json())
+      .then( function(data) {
+        console.log(data);  
+        hallList.insertAdjacentHTML('beforeend', `<div class="remove_hall">
+          <div class="hall-list_numb" data-id="${data.result.halls.id}">
+          <div class="def">- </div>
+          <div class="adm_hall-number">${inp.value}</div>
+          </div>
+          <button class="btn_remove"></button>
+          </div>`);
+
+        inp.value = "";
+        containerAddHall.classList.remove('container__addfilm_active');
+        location.reload();
+      })
+  }    
+})
+
 //переход на popup
 btnAddHall.addEventListener('click', () => {
     containerAddHall.classList.add('container__addfilm_active');
@@ -107,8 +200,7 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
       }) 
 
       //изменяет конфигурацию
-      const arrayConfig = [];
-    
+      let arrayConfig = [];   
       const hallItemConfig = Array.from(document.querySelectorAll(".hall_item__config"));
       for(let i = 0; i < hallItemConfig.length; i++) {
         hallItemConfig[i].addEventListener('click', () => {
@@ -146,18 +238,16 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
 
         for(let j = 0; j < confStepChair.length; j++) {
           if(confStepChair[j].dataset.id === "vip") {
-            confStepChair[j].firstElementChild.src = '../images/adm__chair1.png';        
+            confStepChair[j].firstElementChild.src = './images/adm__chair1.png';        
           }
           if(confStepChair[j].dataset.id === "standart") {
-            confStepChair[j].firstElementChild.src = '../images/adm__chair.png';        
+            confStepChair[j].firstElementChild.src = './images/adm__chair.png';        
           }
           if(confStepChair[j].dataset.id === "disabled") {
-            confStepChair[j].firstElementChild.src = '../images/adm__chair2.png';        
+            confStepChair[j].firstElementChild.src = './images/adm__chair2.png';        
           } 
         }
    
-   
-
         //вводится новое значение рядов
         places.addEventListener('input', () => {
         
@@ -176,7 +266,7 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
             const arrForRow = Array.from(document.querySelectorAll(".conf-step__row"));
             for(let j = 0; j < arrForRow.length; j++) {
               for(let k = 0; k < places.value; k++){
-                arrForRow[j].insertAdjacentHTML('beforeend', `<div class="conf-step__chair" data-id="disabled"><img src="../images/adm__chair2.png" class=""></div>`);
+                arrForRow[j].insertAdjacentHTML('beforeend', `<div class="conf-step__chair" data-id="disabled"><img src="./images/adm__chair2.png" class=""></div>`);
                 arrayConfig[j].push("disabled");
               }
             }
@@ -184,7 +274,6 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
 
         //при клике по схеме мест
         const arrForChair = Array.from(document.querySelectorAll(".conf-step__chair"));
-
         for(let j = 0; j < arrForChair.length; j++) {
           arrForChair[j].addEventListener('click', () => {
             function changeColor() {
@@ -193,15 +282,15 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
               let numbOfPlace = (j + 1) - (places.value * (numbOfRow - 1));
             
               if(arrForChair[j].dataset.id === "disabled") {
-                arrForChair[j].firstElementChild.src = '../images/adm__chair.png';
+                arrForChair[j].firstElementChild.src = './images/adm__chair.png';
                 arrForChair[j].dataset.id = "standart";
                 arrayConfig[numbOfRow - 1][numbOfPlace - 1] = "standart";
               }else if(arrForChair[j].dataset.id === "standart") {
-                arrForChair[j].firstElementChild.src = '../images/adm__chair1.png';
+                arrForChair[j].firstElementChild.src = './images/adm__chair1.png';
                 arrForChair[j].dataset.id = "vip";
                 arrayConfig[numbOfRow - 1][numbOfPlace - 1] = "vip";
               }else if(arrForChair[j].dataset.id === "vip") {
-                arrForChair[j].firstElementChild.src = '../images/adm__chair2.png';
+                arrForChair[j].firstElementChild.src = './images/adm__chair2.png';
                 arrForChair[j].dataset.id = "disabled";
                 arrayConfig[numbOfRow - 1][numbOfPlace - 1] = "disabled";
               }
@@ -223,13 +312,10 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
         //клик по сoхранить
         btnSaveConfig.addEventListener('click', () => {
           console.log(arrayConfig);
-          let obj = {
-            array: arrayConfig
-          }
           const params = new FormData();
           params.set('rowCount', `${rows.value}`);
           params.set('placeCount', `${places.value}`);
-          params.set('config', JSON.strigify(obj));
+          params.set('config', JSON.stringify(arrayConfig));//не работает
 
           fetch( `https://shfe-diplom.neto-server.ru/hall/${hallConfId}`, {
           method: 'POST',
@@ -240,8 +326,8 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
                 console.log( data );
                 location.reload();
               })
-            })//сохр
-          })//закр inp
+            })
+          })
         })//клик по залу
       }//цикл conf
 
@@ -274,7 +360,7 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
               params.set('priceVip', `${priceVip}`);
             }   
 
-      //клик по схранить
+      //клик по сoхранить
       saveBtnPrice.addEventListener('click', () => {
       fetch( `https://shfe-diplom.neto-server.ru/price/${hallPriceId}`, {
           method: 'POST',
@@ -285,11 +371,8 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
           console.log( data );
           inpChip.value = "";
            inpVip.value = "";
-
         })
       })
-      
-
       //клик по отменить
       deleteBtnPrice.addEventListener('click', () => {
       inpChip.value = "";
@@ -303,60 +386,78 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
 
 
 
-
-
       //блок СЕТКА СЕАНСОВ
 
       //клик на добавить фильм
       btnAddFilm.addEventListener('click', () => {
         addFilm.classList.add('container__addfilm_active');
       })
+    
+      //клик по крестик
+      btnClose.addEventListener('click', () => {
+          filmContainer.classList.remove("container__addfilm_active");
+      })
 
-      if(localStorage.getItem('filmOpen') === 'was open') {  
-        //забираем данные о новом фильме
-        let filmsName = localStorage.getItem('filmName');
-        let filmsDuration = localStorage.getItem('filmDuration');
-        let filmsDescription = localStorage.getItem('filmDescription');
-        let filmsOrigin = localStorage.getItem('filmOrigin');
-        let poster = localStorage.getItem('poster');
-        
-        //разметка для нового фильма
-        let checkFilm;
-        if(filmList.children.length < 5){
-          countOfFilms++;//для фона
-        filmList.insertAdjacentHTML('beforeend', `<div draggable="true" class="adm_film bg_${countOfFilms}" data-id="">
-                    <img src="${poster}" alt="постер" class="adm_film-img">
-                    <div class="adm_film-info">
-                        <p class="adm_film-name">${filmsName}</p>
-                        <p class="adm_film-timer">${filmsDuration}</p>
-                    </div>
-                    <button class="delete_film"></button>
-                    </div>`);
-        } else {
-          countOfFilms = 1;
-          filmList.insertAdjacentHTML('beforeend', `<div draggable="true" class="adm_film bg_${countOfFilms}" data-id="">
-                    <img src="${poster}" alt="постер" class="adm_film-img">
-                    <div class="adm_film-info">
-                        <p class="adm_film-name">${filmsName}</p>
-                        <p class="adm_film-timer">${filmsDuration}</p>
-                    </div>
-                    <button class="delete_film"></button>
-                    </div>`);
-          countOfFilms++;
-        }
-        
-        checkFilm = 1;
-        //очищаем хранилище
-        localStorage.removeItem('filmName');
-        localStorage.removeItem('filmDuration');
-        localStorage.removeItem('filmDescription');
-        localStorage.removeItem('filmOrigin');
-        localStorage.removeItem('poster');
-        localStorage.removeItem('filmOpen');
+      //выбор файла poster
+      document.querySelector(".poster_add").onchange = function() {
+          let size = this.files[0].size; // размер в байтах
+          let fileExtension = ['png']; // допустимые типы файлов
+          if(3000000 < size) {
+              alert("не верный формат!");
+          } else if (fileExtension == 1) {
+              alert("превышение размера");
+          } else {
+              file = this.files[0];           
+          }
       }
 
+      //клик по добавить фильм на страницу и на сервер
+      btnAddsFilm.addEventListener('click', () => {
+         const formData = new FormData();
+         formData.set('filmName', `${filmName.value}`);
+         formData.set('filmDuration', `${filmDuration.value}`);
+         formData.set('filmDescription', `${filmDescription.value}`);
+         formData.set('filmOrigin', `${filmOrigin.value}`);
+         formData.set('filePoster', file);
+       
+        fetch( 'https://shfe-diplom.neto-server.ru/film',{
+          method: 'POST',
+          body: formData
+        })
+          .then( response => response.json())
+          .then( function(data) {
+            console.log(data);  
+            filmContainer.classList.remove("container__addfilm_active");  
+            location.reload();
+          })
+      })
 
-      //разметка залов
+      //кнопки удалить фильм
+      let filmId;
+      filmList.addEventListener('click', (e) => {
+        
+        if(e.target.classList.contains("delete_film")) {
+          filmId = e.target.closest(".adm_film").dataset.id;
+          fetch( `https://shfe-diplom.neto-server.ru/film/${filmId}`, {
+             method: 'DELETE',
+          })
+            .then( response => response.json())
+            .then( function(data) {
+              console.log( data );
+              location.reload();
+            })
+        } else {
+          return;
+        }
+      }) 
+        
+      //клик отменить в popup 
+      btnCancel.addEventListener('click', () => {
+        formAddfilm.reset();
+        controller.abort();
+      })      
+
+      //разметка залов time line
       for(let i = 0; i < data.result.halls.length; i++) {
         timeLineList.insertAdjacentHTML('beforeend', `
           <div class="conf-step__seances-hall" data-id="${data.result.halls[i].id}">
@@ -364,9 +465,8 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
           <div class="conf-step__seances-timeline"></div>
           </div>`);
       }
-
       const confStepSeancesHall = Array.from(document.querySelectorAll(".conf-step__seances-hall"));
-      let arrr = [];
+      
       for(let i = 0; i < data.result.seances.length; i++) {
         arrr.push(data.result.seances[i]);
       }
@@ -402,27 +502,240 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
           }
         }
       }
-      const arrTime = Array.from(document.querySelectorAll(".movie-start"));
 
-      //кнопки удалить фильм
-      let filmId;
-      filmList.addEventListener('click', (e) => {
-        
-        if(e.target.classList.contains("delete_film")) {
-          location.reload();
-          filmId = e.target.closest("adm_film").dataset.id;  
-        } else {
-          return;
+        //добавление сеанса на страницу popup
+           
+        //выбор зала
+        hallNameSeanse.addEventListener('change', (e) => {
+            timeNameSeanse.length = 0;
+            resultForTime.length = 0; 
+            arrForTime.length = 0;       
+            targetHall = Number(e.target.options[e.target.selectedIndex].dataset.id);   
+        })
+   
+        //выбор фильма
+        filmNameSeanse.addEventListener('change', (e) => { 
+            timeNameSeanse.length = 0;
+            resultForTime.length = 0;
+            arrForTime.length = 0;
+            targetFilm = Number(e.target.options[e.target.selectedIndex].dataset.id);
+            checkedIdfilmName = e.target.options[e.target.selectedIndex].text;
+            for(let i = 0; i < data.result.films.length; i++) {
+                if(data.result.films[i].id === Number(targetFilm)) {
+                    checkFilmDuration = Number(data.result.films[i].film_duration);//продолж выбран фильма
+                }
+            }
+        })
+
+        //клик время
+        timeNameSeanse.addEventListener('focus', (e) => { 
+          //сортируем массив сеансов по времени
+        let arrSort = [];//массив всех сеансов во всех залах
+        for(let i = 0; i < data.result.seances.length; i++) {
+            arrSort.push(data.result.seances[i]);
         }
-      }) 
+        arrSort.sort(function(a, b) {
+            return a.seance_time.replace(':', '') - b.seance_time.replace(':', '');
+        });
+        console.log(arrSort);
+            if(filmNameSeanse.value.trim() && hallNameSeanse.value.trim()) {
+                timeNameSeanse.length = 0;  
+                resultForTime.length = 0;
+                arrForTime.length = 0; 
+                countOfTime = 0;
+                let countOfSeans = 0;
+                for(let i = 0; i < arrSort.length; i++) { 
+                    for(j = 0; j < data.result.films.length; j++) {
+
+                        if(Number(arrSort[i].seance_hallid) === Number(targetHall)) {//ищем зал
+                          //время первого сеанса в заданном зале
+                          if(countOfSeans === 0){
+                            firstSeans = arrSort[i].seance_time.split(':', [2]);
+                            firstSeansInMin = Number(firstSeans[0]) * 60 + Number(firstSeans[1]);
+                            countOfSeans++;
+                          }             
+                            if(Number(arrSort[i].seance_filmid) === Number(data.result.films[j].id)) {//ищем фильм
+                                searchDuration = data.result.films[j].film_duration;//продолжительн фильма 
+                                //считаем свободное время
+                                let hourAndMinutes = arrSort[i].seance_time.split(':', [2]);
+                                let inMinutes = Number(hourAndMinutes[0]) * 60 + Number(hourAndMinutes[1]);                                
+                                let searchTime = inMinutes + Number(searchDuration);
+                                arrForTime.push(searchTime);//массив свободного времени
+                                console.log(arrForTime);
+
+                                if(arrForTime.length > 1) {
+                                    //находим разницу м/у каждой парой в массиве времени
+                                    for(let k = countOfTime; k < arrForTime.length; k++) {
+                                        countOfTime++;
+                                        diffrens = inMinutes - arrForTime[k];
+                                        if(diffrens >= checkFilmDuration) {
+                                          resultForTime.push(arrForTime[k]);//массив доступного времени для брони
+                                          while(diffrens >= (checkFilmDuration + (60 * timeCount))) {
+                                            resultForTime.push(arrForTime[k] + (60 * timeCount));
+                                            timeCount++;
+                                          } 
+                                        } else {
+                                            break;
+                                        } 
+                                    }
+                                    break;
+                                }
+                            break;
+                            } 
+                        } 
+                    }//внутр цикл
+                }//внеш цикл
+                console.log(resultForTime);
+                 
+                //доб время с 00 до первого сеанса
+                let numb = 0;
+                if(arrForTime.length > 0) {
+                  while((firstSeansInMin - Number(checkFilmDuration)) > numb) {
+                    resultForTime.push(numb);
+                    numb = numb + 60;//отсчитывает каждый час
+                  } 
+                } else {//если в зале ни одного сеанса
+                  //arrForTime.length = 0;
+                  while((numb + Number(checkFilmDuration)) < 1439) {
+                    resultForTime.push(numb);
+                    numb = numb + 60;
+                  }
+                } 
+                //начиная с последнего сеанса в зале,добав время до 23:59
+                if((arrForTime.length > 0) && (arrForTime[arrForTime.length - 1] + Number(checkFilmDuration)) < 1439) {
+                  resultForTime.push(arrForTime[arrForTime.length - 1]);
+                }  
+                console.log(resultForTime);
+                //сортируем по возраст времени
+                resultForTime.sort(function(a, b) {
+                  return a - b;
+                });
+                
+                //формир разметку времени в select
+                for(let i = 0; i < resultForTime.length; i++) {
+                    //переводим минуты в часы
+                    let reversHour = Math.floor(Number(resultForTime[i]) / 60);
+                    let reversMunut = Number(resultForTime[i]) - (reversHour * 60);
+                    if(reversMunut < 10) {
+                        resultMin = ":0" + reversMunut; 
+                    } else {
+                        resultMin = ":" + reversMunut;
+                    }
+                    if(reversHour < 10) {
+                        resultHour = "0" + reversHour; 
+                    } else {
+                        resultHour = reversHour;
+                    }
+                    result = resultHour + resultMin;
+                    
+                    e.target.insertAdjacentHTML('beforeend', `<option class="option_addseans name_of_time" data-id="">${result}</option>`);
+                } 
+                checkedTime = e.target.options[0].text;
+            }
+        })           
+
+        //выбор времени
+        timeNameSeanse.addEventListener('change', (e) => { 
+            checkedTime = e.target.options[e.target.selectedIndex].text;
+        })
+
+        //клик добавить сеанс на страницу
+        btnAdds.addEventListener('click', () => {        
+            localStorage.setItem('targetHall', `${targetHall}`);
+            localStorage.setItem('targetFilm', `${targetFilm}`);
+            localStorage.setItem('checkedTime', `${checkedTime}`);
+            localStorage.setItem('checkedIdfilmName', `${checkedIdfilmName}`);
+            localStorage.setItem('countAdd', 'add');
+            contSeans.classList.remove("container__addfilm_active");
+            formSeans.reset();
+        })
+
+        let idCheckedFilm;
+        let targetTime;
+        let checkedIdHall;
+        function addSeans() {
+          idCheckedFilm = localStorage.getItem('targetFilm');
+          let checkedNameFilm = localStorage.getItem('checkedIdfilmName');
+          targetTime = localStorage.getItem('checkedTime');
+          checkedIdHall = localStorage.getItem('targetHall');
+
+          //разметка для нового сеанса
+
+          //фон сеансу
+          for(let i = 0; i < arrAdmFilm.length; i++) {
+            if(Number(arrAdmFilm[i].dataset.id) === Number(idCheckedFilm)) {
+              searchClass = arrAdmFilm[i].className.slice(9);
+            }
+          }
+          
+          let nextElInd;
+          for(let i = 0; i < confStepSeancesHall.length; i++) {
+            if(Number(checkedIdHall) === Number(confStepSeancesHall[i].dataset.id)) {
+              if(confStepSeancesHall[i].lastElementChild.children.length > 0) {
+                for(let j = 0; j < confStepSeancesHall[i].lastElementChild.children.length; j++) {
+                if(confStepSeancesHall[i].lastElementChild.children[j].lastElementChild.textContent.split(':', [1]) > targetTime.split(':', [1])) {
+                  nextElInd = confStepSeancesHall[i].lastElementChild.children[j];//необх инд для нового сеанса
+                  break;
+                }
+              }
+              nextElInd.insertAdjacentHTML('beforebegin', `
+                <div draggable="true" class="conf-step__seances-movie ${searchClass}" data-id="${idCheckedFilm}">
+                  <p class="seances-movie-tittle">${checkedNameFilm}</p>
+                  <div class="movie-start" data-id="00">${targetTime}</div>
+                </div>`);
+              } else {//если зал пустой
+                confStepSeancesHall[i].lastElementChild.insertAdjacentHTML('beforeend', `
+                <div draggable="true" class="conf-step__seances-movie ${searchClass}" data-id="${idCheckedFilm}">
+                  <p class="seances-movie-tittle">${checkedNameFilm}</p>
+                  <div class="movie-start" data-id="00">${targetTime}</div>
+                </div>`);
+                
+              }
+            }
+          } 
+        }//фун
+        if(localStorage.getItem('countAdd') === 'add') {
+          addSeans();
+          localStorage.removeItem('countAdd');
+        }
+         
+        //клик по отмене popup доб сеанса
+        cancelSeanse.addEventListener('click', () => {
+            inpChip.value = "";
+            inpVip.value = "";
+            controller.abort();
+            hallNameSeanse.length = 0;
+            filmNameSeanse.length = 0;
+            timeNameSeanse.length = 0;  
+            resultForTime.length = 0;
+            arrForTime.length = 0;
+            countOfTime = 0;
+        })
+
+        //клик по крестику popup доб сеанса
+        btnCloseSeanse.addEventListener('click', () => {
+            //удаляем старую разметку
+            hallNameSeanse.length = 0;
+            filmNameSeanse.length = 0;
+            timeNameSeanse.length = 0;  
+            resultForTime.length = 0;
+            arrForTime.length = 0;
+            countOfTime = 0;
+            contSeans.classList.remove("container__addfilm_active");
+        })
 
 
-      //перетаскивание
+        //ПЕРЕТАСКИВАНИЕ
       const line = Array.from(document.querySelectorAll(".conf-step__seances-timeline"));
       const hiddenDelete = document.querySelector(".hidden_delete");
-      const wrapSeans = document.querySelector(".del_seans");
+      let targetFilm;
+      let targetHall;
 
-      //добав сеанса
+      //добав сеанса на страницу
+      filmList.addEventListener('dragstart', (evt) => {
+        targetFilm = evt.target.dataset.id;//выбранный фильм
+      })
+
       for(let i = 0; i < line.length; i++) {
         line[i].addEventListener('dragover', (evt) => {
             // Разрешаем сбрасывать элементы в эту область
@@ -431,158 +744,119 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
 
           line[i].addEventListener('drop', (evt) => {
             evt.preventDefault();
+            targetHall = evt.target.closest('.conf-step__seances-hall').dataset.id;
+           
             containerSeans.classList.add("container__addfilm_active");
-          })
-
-        //удал сеанса
-        let nameFilmLine;
-        let activeEl;
-        let seanceId;
-          line[i].addEventListener('dragstart', (evt) => {//работает
-            evt.preventDefault();           
-            hiddenDelete.classList.add("show"); 
-            if(evt.target.classList.contains("conf-step__seances-movie")) {
-              nameFilmLine = evt.target.firstElementChild.textContent;
-              activeEl = evt.target;
-              seanceId = evt.target.lastElementChild.dataset.id;
-            }
-            if(evt.target.classList.contains("seances-movie-tittle")) {
-              nameFilmLine = evt.target.textContent;
-              activeEl = evt.target.closest("conf-step__seances-movie");
-              seanceId = evt.target.closest("conf-step__seances-movie").lastElementChild.dataset.id;
+            //формируем разметку select фильмов
+            for(let j = 0; j < data.result.films.length; j++) {
+              filmNameSeanse.insertAdjacentHTML('beforeend', `<option class="option_addseans name_of_film" data-id="${data.result.films[j].id}">${data.result.films[j].film_name}</option>`);
+              if(Number(data.result.films[j].id) === Number(targetFilm)) {
+                filmNameSeanse.value = data.result.films[j].film_name;
+                checkedIdfilmName = filmNameSeanse.value;
+                checkFilmDuration = Number(data.result.films[j].film_duration);//продолж выбран фильма
+              }
             } 
-            localStorage.setItem('name', nameFilmLine); 
-            console.log('начало'); 
+            //формир разметку select залов
+            for(let j = 0; j < data.result.halls.length; j++) {
+              hallNameSeanse.insertAdjacentHTML('beforeend', `<option class="option_addseans name_of_hall" data-id="${data.result.halls[j].id}">${data.result.halls[j].hall_name}</option>`);
+              if(Number(data.result.halls[j].id) === Number(targetHall)) {
+                hallNameSeanse.value = data.result.halls[j].hall_name;
+              }
+            }
           })
-      }
-      hiddenDelete.addEventListener('dragover', (evt) => {//не раб
-        evt.preventDefault();  
-        const isMoveable = activeEl.classList.contains('conf-step__seances-movie');
-        if (!isMoveable) {
-          return;
-        }
-        console.log('over');
+      }//цикл
+
+      //удал сеанса со страницы
+      let nameFilmLine;
+      let activeEl;
+      for(let i = 0; i < movieArr.length; i++){     
+        movieArr[i].addEventListener('dragstart', () => {          
+        hiddenDelete.classList.add("show"); 
+        activeEl = movieArr[i];
+        nameFilmLine = movieArr[i].firstElementChild.textContent;
+        seanceId = movieArr[i].dataset.id;
+        localStorage.setItem('name', nameFilmLine); 
+      })     
+      }//цикл   
+
+      hiddenDelete.addEventListener('dragover', (evt) => {
+        evt.preventDefault();         
       }) 
 
-      hiddenDelete.addEventListener('drop', (evt) => {//не раб
+      hiddenDelete.addEventListener('drop', (evt) => {
         evt.preventDefault();
         hiddenDelete.classList.remove("show");
         deleteSeances.classList.add("container__addfilm_active");
-        console.log('drop');
+        labelFilm.textContent = nameFilmLine;
 
-        //удаляем фильм из ленты
-        if(localStorage.getItem('remove') === 'yes') {
+        //клик по удалить
+        delSeans.addEventListener('click', () => {       
+          containerDelSeans.classList.remove("container__addfilm_active");
           activeEl.remove();
           localStorage.removeItem('name');
-        }
+      })      
       })
+        //клик по крестику в удал сеанса
+        closeDelSeans.addEventListener("click", () => {
+            containerDelSeans.classList.remove("container__addfilm_active");
+            localStorage.removeItem('name'); 
+        })
+     
+        //клик по отмене в удал сеанса
+        delSeansCancel.addEventListener('click', () => {
+            containerDelSeans.classList.remove("container__addfilm_active");
+        })
 
 
-        //добавление сеанса на страницу
-        if(localStorage.getItem('seanseOpen') === 'was open') {
-          
-          //забираем данные о новом сеансе
-          let checkedsIdHall = localStorage.getItem('checkedIdHall');
-          let checkedsIdfilm = localStorage.getItem('checkedIdfilm');
-          let checkedsTime = localStorage.getItem('checkedTime');
-          let checkedIdfilmName = localStorage.getItem('checkedIdfilmName');
+        //клик по сохранить сеансы на основ стр
 
-          //разметка для нового сеанса
-
-          //фон сеансу
-          for(let i = 0; i < arrAdmFilm.length; i++) {
-            if(Number(arrAdmFilm[i].dataset.id) === Number(checkedsIdfilm)) {
-              searchClass = arrAdmFilm[i].className.slice(9);
-            }
-          }
-
-          let checkSeans;
-          for(let i = 0; i < confStepSeancesHall.length; i++) {
-            if(Number(checkedsIdHall) === Number(confStepSeancesHall[i].dataset.id)) {
-              confStepSeancesHall[i].lastElementChild.insertAdjacentHTML('beforeend', `
-                <div draggable="true" class="conf-step__seances-movie ${searchClass}" data-id="${checkedsIdfilm}">
-                  <p class="seances-movie-tittle">${checkedIdfilmName}</p>
-                  <div class="movie-start" data-id="">${checkedsTime}</div>
-                </div>`);
-                checkSeans = 1;
-            }
-          }
-        
-          //очищаем хранилище
-          localStorage.removeItem('checkedIdHall');
-          localStorage.removeItem('checkedIdfilm');
-          localStorage.removeItem('checkedTime');
-          localStorage.removeItem('checkedTime');
-        }
-
-
-        //клик по сохранить сеансы 
+        //добавление сеанса в систему
         btnFilmSeanseSave.addEventListener('click', (e) => {
-
-          //удаление фильма из системы
-          if(filmId === true) {
-          fetch( `https://shfe-diplom.neto-server.ru/film/${filmId}`, {
-                  method: 'DELETE',
+          const movieArr = Array.from(document.querySelectorAll(".conf-step__seances-movie"));
+          console.log(movieArr);
+          for(let i = 0; i < movieArr.length; i++) {
+            if(movieArr[i].lastElementChild.dataset.id === '00') {
+              movieArr[i].lastElementChild.dataset.id = '';
+              const params = new FormData();
+              params.set('seanceHallid', `${movieArr[i].closest('.conf-step__seances-hall').dataset.id}`);
+              params.set('seanceFilmid', `${movieArr[i].dataset.id}`);
+              params.set('seanceTime', `${movieArr[i].lastElementChild.textContent}`);
+                            
+              fetch( `https://shfe-diplom.neto-server.ru/seance`, {
+                method: 'POST',
+                body: params 
               })
+                .then( response => response.json())
+                .then( function(data) { 
+                  console.log( data );
+                  location.reload();
+                })
+              }
+            }
+  
+
+          //удаление сеанса из системы 
+        function equal() {
+          for(let i = 0; i < arrr.length; i++) {
+            for(let j = 0; j < movieArr.length; j++) {
+              if(arrr[i].id === Number(movieArr[j].lastElementChild.dataset.id)) {//нашелся
+                j = 0;
+                break;
+              } else if(Number(j) === Number(movieArr.length - 1)) {
+                  console.log(arrr[i].id);
+                  fetch( `https://shfe-diplom.neto-server.ru/seance/${arrr[i].id}`, {
+                  method: 'DELETE',
+                })
                   .then( response => response.json())
                   .then(function(data) {
                     console.log( data );
                     location.reload();
                   })
+                }        
+              }           
           }
-
-          //добавление фильма в систему
-          if(checkFilm ===  1) {
-            const formData = new FormData();
-            formData.set('filmName', `${filmsName}`);
-            formData.set('filmDuration', `${filmsDuration}`);
-            formData.set('filmDescription', `${filmsDescription}`);
-            formData.set('filmOrigin', `${filmsOrigin}`);
-            formData.set('filePoster', `${poster}`);
-          
-              fetch( 'https://shfe-diplom.neto-server.ru/film',{
-                  method: 'POST',
-                  body: formData
-              })
-                  .then( response => response.json())
-                  .then( function(data) {
-                      location.reload();
-                      console.log(data);  
-              })
-            }
-
-          //добавление сеанса в систему
-          if(checkSeans === 1) {
-
-          const params = new FormData();
-          params.set('seanceHallid', `${checkedsIdHall}`);
-          params.set('seanceFilmid', `${checkedsIdfilm}`);
-          params.set('seanceTime', `${checkedsTime}`);
-                        
-          fetch( `https://shfe-diplom.neto-server.ru/seance`, {
-            method: 'POST',
-            body: params 
-          })
-            .then( response => response.json())
-            .then( function(data) { 
-              console.log( data );
-              location.reload();
-            })
-          }
-
-
-          //удаление сеанса из системы
-          if(seanceId === true) {
-          fetch( `https://shfe-diplom.neto-server.ru/seance/${seanceId}`, {
-            method: 'DELETE',
-          })
-            .then( response => response.json())
-            .then(function(data) {
-              console.log( data );
-              location.reload();
-            })
-          }
-          
+        }
+        equal();      
       })//по сохр сеанс
 
 

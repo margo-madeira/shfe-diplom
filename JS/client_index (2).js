@@ -7,8 +7,12 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
 .then( function(data) {
   console.log(data);
   function print() {
+    data.result.seances.sort(function(a, b) {
+      return a.seance_time.replace(':', '') - b.seance_time.replace(':', '');
+    });
+    
     for(let i = 0; i < data.result.seances.length; i++) {
-
+      let countHalls = 0;
       let indOfHall = data.result.halls.findIndex(el => data.result.seances[i].seance_hallid === el.id);
       let nameOfHall = data.result.halls[indOfHall].hall_name;
         if(data.result.halls[indOfHall].hall_open === 1) {
@@ -45,24 +49,21 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
        
           //фильм уже отразился на стр
           } else {
-            for (let j = 0; j < arrMovie[indOfFilm].lastElementChild.children.length; j++) {//по залам
-              let countHalls = 0;
+            for (let j = 0; j < arrMovie[indOfFilm].lastElementChild.children.length; j++) {//по залам         
               if(Number(arrMovie[indOfFilm].lastElementChild.children[j].dataset.id) !== data.result.seances[i].seance_hallid) {
                 countHalls++;
-                if(countHalls === arrMovie[indOfFilm].lastElementChild.children.length) {//зал не найден
+                if(countHalls === Number(arrMovie[indOfFilm].lastElementChild.children.length)) {//зал не найден
                   arrMovie[indOfFilm].lastElementChild.insertAdjacentHTML("beforeend", ` <div class="movie-seances__hall" data-id=${data.result.seances[i].seance_hallid}>
                       <h6 class="number__hall">${nameOfHall}</h6>
                       <ul class="time__list">  
                           <li class="time__list-item time__list__text" data-id="${data.result.seances[i].id}">${data.result.seances[i].seance_time}</li>
                       </ul>
                   </div>`);
-                } else {
-                  return;
+                  break;
                 }
               } else {//зал найден
                 arrMovie[indOfFilm].lastElementChild.children[j].lastElementChild.insertAdjacentHTML("beforeend", `<li class="time__list-item time__list__text" data-id="${data.result.seances[i].id}">${data.result.seances[i].seance_time}</li>`);
               }//усл для count
-              break;
             }//по залам
           }//фильм уже есть
         } //open
@@ -95,7 +96,7 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
           if(e.target.classList.contains("time__list-item") || e.target.classList.contains("time__list__text")) {
             let checkedSeans = Number(e.target.dataset.id);
             localStorage.setItem('checkedSeans', checkedSeans);
-            document.location='../index/client_hall.html';
+            document.location='./client_hall.html';
           }
         })
       }

@@ -57,7 +57,7 @@ body {
   width: 100%;
   display: block;
   padding-bottom: 186px;
-  background-image: url(images/фон1.png);
+  background-image: url(../images/фон1.png);
   background-repeat: no-repeat;
   background-position: bottom left;
   background-size: cover;
@@ -302,7 +302,7 @@ body {
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-image: url(images/фон1.png);
+  background-image: url(../images/фон1.png);
   background-repeat: no-repeat;
   background-position: bottom right;
   background-size: cover;
@@ -470,14 +470,14 @@ body {
 
 .movie__poster {
   width: 125px;
-  height: 175px; 
+  height: 170px; 
   position: relative;
   z-index: 0;
 }
 
 .movie__description::after {
   content: "";
-  background-image: url(images/after.png);
+  background-image: url(../images/after.png);
   display: block;
   width: 6px;
   height: 14px;
@@ -596,7 +596,7 @@ body {
 .container_pay {
   width: 100%;
   padding-bottom: 186px;
-  background-image: url(images/фон1.png);
+  background-image: url(../images/фон1.png);
   background-repeat: no-repeat;
   background-position: bottom left;
   background-size: cover; 
@@ -620,7 +620,7 @@ body {
 
 .header__payment::before {
   content: "";
-  background: url(images/pay__before.png);
+  background: url(../images/pay__before.png);
   width: 100%;
   height: 3px;
   position: absolute;
@@ -630,7 +630,7 @@ body {
 
 .header__payment::after {
   content: "";
-  background: url(images/pay__after.png);
+  background: url(../images/pay__after.png);
   width: 100%;
   height: 3px;
   position: absolute;
@@ -659,7 +659,7 @@ body {
 
 .ticket__info-wrapper::before {
   content: "";
-  background: url(images/__before2.png);
+  background: url(../images/__before2.png);
   width: 100%;
   height: 3px;
   position: absolute;
@@ -669,7 +669,7 @@ body {
 
 .ticket__info-wrapper::after {
   content: "";
-  background: url(images/__after2.png);
+  background: url(../images/__after2.png);
   width: 100%;
   height: 3px;
   position: absolute;
@@ -789,7 +789,7 @@ body {
 .close__addfilm {
   width: 22px;
   height: 22px;
-  background: url(images/close.png.png);
+  background: url(../images/close.png.png);
   border: none;
 }
 
@@ -950,11 +950,11 @@ body {
 }
 
 .select_arrow {
-  background-image: url(images/Union1.svg);
+  background-image: url(../images/Union1.svg);
 }
 
 .select_time {
-  background-image: url(images/Union.svg);
+  background-image: url(../images/Union.svg);
 }
 
 .option_addseans {
@@ -966,7 +966,7 @@ body {
 
 
 .container__login {
-  background-image: url(images/popup_admin.png);
+  background-image: url(../images/popup_admin.png);
   width: 100%;
   background-repeat: no-repeat;
   background-position: top right 50%;
@@ -1053,7 +1053,7 @@ body {
 .container__ticket {
   width: 100%;
   padding-bottom: 186px;
-  background-image: url(images/фон1.png);
+  background-image: url(../images/фон1.png);
   background-repeat: no-repeat;
   background-position: bottom right;
   background-size: cover;
@@ -1089,7 +1089,7 @@ body {
 
 .container_adm-ind {
   width: 100%;
-  background-image: url(images/popup_admin.png);
+  background-image: url(../images/popup_admin.png);
   background-repeat: no-repeat;
   background-position: top right 45%;
   background-size: cover;
@@ -1159,7 +1159,7 @@ body {
 
 .adm_header::after {
   content: "";
-  background: url(images/arrow_config.png);
+  background: url(../images/arrow_config.png);
   width: 24px;
   height: 16px;
   position: absolute;
@@ -1247,7 +1247,7 @@ body {
 
 .btn_remove::before {
   content: "";
-  background: url(images/delete_film.png);
+  background: url(../images/delete_film.png);
   width: 12px;
   height: 12px;
   flex-shrink: 0;
@@ -1320,7 +1320,8 @@ body {
   font-weight: 500;
   line-height: 16px;
   text-transform: uppercase;
-  width: 81px;
+  min-width: 81px;
+  max-width: 95px;
   height: 42px;
   padding: 8px 9px;
   flex-direction: column;
@@ -1671,7 +1672,7 @@ body {
   width: 10px;
   height: 10px;
   background: lightgray 0px 0px / 200% 100% no-repeat;
-  background-image: url(images/delete_film.png);
+  background-image: url(../images/delete_film.png);
 }
 
 .time-line__list {
@@ -1681,7 +1682,7 @@ body {
   align-items: flex-start;
   min-width: 328px;
   width: 100%;
-  margin: 0 auto;
+  margin: 40px auto;
   position: relative;
 }
 
@@ -1738,14 +1739,14 @@ body {
 .conf-step__seances-movie {
   display: flex;
   box-sizing: border-box;
-  width: 72px;
+  min-width: 72px;
+  max-width: 85px;
   height: 40px;
   padding: 10px;
   flex-direction: column;
   align-items: flex-start;
   border: 1px solid rgba(0, 0, 0, 0.30);
   position: relative;
-  flex-shrink: 0;
   flex-wrap: nowrap;
   cursor: move;
 }
@@ -1906,7 +1907,7 @@ body {
     top: -34px;
     background: #BC95D6;
     content: "";
-    background-image: url(images/line_tab.png);
+    background-image: url(../images/line_tab.png);
   }
 
   .adm_header::after {

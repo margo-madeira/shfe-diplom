@@ -31,7 +31,6 @@ main.addEventListener('touchend', () => {
         console.log(data);
 
         //находим сеанс по его id
-
         let indSeans = data.result.seances.findIndex(el => el.id === Number(checkedSeans));
 
         //заносим данные в шапку
@@ -72,56 +71,78 @@ main.addEventListener('touchend', () => {
                 const placeOfScheme = Array.from(document.querySelectorAll(".place_of_scheme"));
                 for(let i = 0; i < placeOfScheme.length; i++) {
                 if(placeOfScheme[i].dataset.id === "vip") {
-                    placeOfScheme[i].firstElementChild.src = '../images/свободно_вип.png';        
+                    placeOfScheme[i].firstElementChild.src = './images/свободно_вип.png';        
                 }
                 if(placeOfScheme[i].dataset.id === "standart") {
-                    placeOfScheme[i].firstElementChild.src = '../images/свободно.png';        
+                    placeOfScheme[i].firstElementChild.src = './images/свободно.png';        
                 }
                 if(placeOfScheme[i].dataset.id === "taken") {
-                    placeOfScheme[i].firstElementChild.src = '../images/занято.png';        
+                    placeOfScheme[i].firstElementChild.src = './images/занято.png';        
                 }      
             }
             
-            //при выборе мест
-            
+            //при выборе мест 
             places.addEventListener('click', (e) => {
-            
-                if(e.target.classList.contains("place_of_scheme")) {
-                    e.target.firstElementChild.src = '../images/выбрано.png';
-                    e.target.firstElementChild.classList.add("check_blue");
-                }
-                if(e.target.classList.contains("img_place_scheme")) {
-                    e.target.src = '../images/выбрано.png';
-                    e.target.classList.add("check_blue");
-                }
-
-            
-                let indPlace = placeOfScheme.findIndex(el => el.firstElementChild.classList.contains("check_blue"));
-                numbOfRow = Math.ceil((indPlace + 1) / maxPlaces);
-                numbOfPlace = (indPlace + 1) - (maxPlaces * (numbOfRow - 1));
-                if(e.target.closest(".place_of_scheme").dataset.id === "vip") {
-                    coast = 350;
-                }
-                if(e.target.closest(".place_of_scheme").dataset.id === "standart") {
-                    coast = 250;
-                } 
-                function Ticket(numbOfRow, numbOfPlace, coast) {
-                    this.row = `${numbOfRow}`;
-                    this.place = `${numbOfPlace}`;
-                    this.coast = `${coast}`;      
-                }
-                ticket = new Ticket(numbOfRow, numbOfPlace, coast);
-                arr.push(ticket);
-                return;
-                
+               
+                if(e.target.classList.contains("check_blue")) {//снимает голубой цвет
+                    if(e.target.closest('.place_of_scheme').dataset.id === "vip") {
+                        if(e.target.classList.contains("place_of_scheme")) {
+                            e.target.firstElementChild.src = './images/свободно_вип.png';
+                            e.target.firstElementChild.classList.remove("check_blue");
+                        }
+                        if(e.target.classList.contains("img_place_scheme")) {
+                            e.target.src = './images/свободно_вип.png';
+                            e.target.classList.remove("check_blue");
+                        } 
+                    }
+                    if(e.target.closest('.place_of_scheme').dataset.id === "standart") {
+                        if(e.target.classList.contains("place_of_scheme")) {
+                            e.target.firstElementChild.src = './images/свободно.png';
+                            e.target.firstElementChild.classList.remove("check_blue");
+                        }
+                        if(e.target.classList.contains("img_place_scheme")) {
+                            e.target.src = './images/свободно.png';
+                            e.target.classList.remove("check_blue");
+                        } 
+                    } 
+                } else {
+                    if(e.target.classList.contains("place_of_scheme")) {
+                        e.target.firstElementChild.src = './images/выбрано.png';
+                        e.target.firstElementChild.classList.add("check_blue");
+                    }
+                    if(e.target.classList.contains("img_place_scheme")) {
+                        e.target.src = './images/выбрано.png';
+                        e.target.classList.add("check_blue");
+                    }
+                }      
             })//клик по месту 
        
         
-        //клик по кнопке
-        btnReserv.addEventListener('click', () => { 
+        //клик по забронировать
+        btnReserv.addEventListener('click', (e) => { 
+           
+            for(let i = 0; i < placeOfScheme.length; i++) {
+                if(placeOfScheme[i].firstElementChild.classList.contains('check_blue')) {
+                    //вычисляем номер выбранного места
+                    numbOfRow = Math.ceil((i + 1) / maxPlaces);
+                    numbOfPlace = (i + 1) - (maxPlaces * (numbOfRow - 1));
+                    if(placeOfScheme[i].dataset.id === "vip") {
+                        coast = 350;
+                    }
+                    if(placeOfScheme[i].dataset.id === "standart") {
+                        coast = 250;
+                    } 
+                    function Ticket(numbOfRow, numbOfPlace, coast) {
+                        this.row = `${numbOfRow}`;
+                        this.place = `${numbOfPlace}`;
+                        this.coast = `${coast}`;      
+                    }
+                    ticket = new Ticket(numbOfRow, numbOfPlace, coast);
+                    arr.push(ticket);   
+                }
+            }
             localStorage.setItem('tickets', JSON.stringify(arr));
-            document.location='../index/client_pay.html';
+            document.location='./client_pay.html';
         })
     })//config
-
 })//alldata

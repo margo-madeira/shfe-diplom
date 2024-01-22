@@ -54,7 +54,7 @@ if(currentDay > 0) {
 
 //при клике переходит на авторизацию
 btnIndex.addEventListener('click', () => {
-  document.location='../index/admin_login.html';
+  document.location='./admin_login.html';
 })
 
 //проставляет дни недели
