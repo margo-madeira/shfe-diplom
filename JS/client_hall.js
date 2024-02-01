@@ -132,12 +132,12 @@ main.addEventListener('touchend', () => {
                     if(placeOfScheme[i].dataset.id === "standart") {
                         coast = 250;
                     } 
-                    function Ticket(numbOfRow, numbOfPlace, coast) {
-                        this.row = `${numbOfRow}`;
-                        this.place = `${numbOfPlace}`;
-                        this.coast = `${coast}`;      
+                    function Ticket(coast, numbOfPlace, numbOfRow) { 
+                        this.row = `${numbOfRow}`,   
+                        this.place = `${numbOfPlace}`,      
+                        this.coast = `${coast}`     
                     }
-                    ticket = new Ticket(numbOfRow, numbOfPlace, coast);
+                    ticket = new Ticket(coast, numbOfPlace, numbOfRow,);
                     arr.push(ticket);   
                 }
             }

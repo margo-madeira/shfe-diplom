@@ -7,9 +7,28 @@ const today = document.querySelector(".today");
 let currentDate = new Date();
 let count = 1;
 const revers = document.querySelector(".revers");
-let checkedDate = currentDate.getDate();
+let checkedDate;
 let checkedmonth;
 let searchMonth;
+
+//при открытии стр выделяет today
+today.classList.add("menu-list-item__checked");
+today.firstElementChild.classList.add("text-menu__bold");
+today.lastElementChild.classList.add("text-menu__bold");
+if(today.classList.contains("menu-list-item__checked")) {
+  checkedDate = currentDate.getDate();
+  if(checkedDate < 10) {
+    checkedDate = "0" + checkedDate;
+  }
+  checkedmonth = currentDate.getMonth();
+  if(checkedmonth < 9) {
+    searchMonth = "0" + (checkedmonth + 1);
+  } else {
+    searchMonth = checkedmonth + 1;
+  }
+  localStorage.setItem('checkedDate', checkedDate);
+}
+
 
 let days = [
     'Пн,',
@@ -20,8 +39,6 @@ let days = [
     'Сб,',
     'Вс,'
   ];
-
-
 
 let currentDay = currentDate.getDay();
 let counter = 0;
@@ -81,7 +98,8 @@ for(let i = 0; i < menuListItemArr.length; i++) {
   if((Number(currentDate.getDate()) + count) <= dayOFMonth) {
     menuListItemArr[i].lastElementChild.textContent = Number(currentDate.getDate()) + count;
     count++; 
-    checkedmonth = currentDate.getMonth(); 
+    //checkedmonth = currentDate.getMonth(); 
+    menuListItemArr[i].dataset.id = currentDate.getMonth();
   } else {
     break;
   }
@@ -91,12 +109,16 @@ let anotherCount = 1;
 for(let i = count - 1; i < menuListItemArr.length; i++) {
   menuListItemArr[i].lastElementChild.textContent = anotherCount;
   anotherCount++;
-  checkedmonth = currentDate.getMonth() + 1;
+  //checkedmonth = currentDate.getMonth() + 1;
+  menuListItemArr[i].dataset.id = currentDate.getMonth() + 1;
 }
 
 //простав checkedDate у today
 today.addEventListener('click', () => {
   checkedDate = currentDate.getDate();
+  today.classList.add("menu-list-item__checked");
+  today.firstElementChild.classList.add("text-menu__bold");
+  today.lastElementChild.classList.add("text-menu__bold");
   for(let i = 0; i < menuListItemArr.length; i++) {
       menuListItemArr[i].classList.remove("menu-list-item__checked");
       menuListItemArr[i].classList.add("menu-list-item");
@@ -112,9 +134,22 @@ for(let i = 0; i < menuListItemArr.length; i++) {
     menuListItemArr[i].classList.remove("menu-list-item");
     menuListItemArr[i].firstElementChild.classList.add("text-menu__bold");
     menuListItemArr[i].lastElementChild.classList.add("text-menu__bold");
+
+    today.classList.remove('menu-list-item__checked');
+    today.firstElementChild.classList.remove('text-menu__bold');
+    today.lastElementChild.classList.remove('text-menu__bold');
     
     if(menuListItemArr[i].classList.contains("menu-list-item__checked")) {
       checkedDate = menuListItemArr[i].lastElementChild.textContent;
+      if(Number(checkedDate) < 10) {
+        checkedDate = "0" + checkedDate;
+      }
+      checkedmonth = menuListItemArr[i].dataset.id;
+      if(checkedmonth < 9) {
+        searchMonth = "0" + (Number(checkedmonth) + 1);
+      } else {
+        searchMonth = Number(checkedmonth) + 1;
+      }
       localStorage.setItem('checkedDate', checkedDate);
     }
 
@@ -131,24 +166,29 @@ for(let i = 0; i < menuListItemArr.length; i++) {
         }
       }
     }
+    const timeListItem = document.querySelectorAll(".time__list-item");
+    const arrTimeListItem = Array.from(timeListItem);
+    if(Number(checkedDate) !== Number(currentDate.getDate())) {
+      for(let i = 0; i < arrTimeListItem.length; i++) {   
+        if(arrTimeListItem[i].classList.contains("no_active")){
+          arrTimeListItem[i].classList.remove("no_active");
+          arrTimeListItem[i].addEventListener("click", (e) => {
+            if(e.target.classList.contains("time__list-item") || e.target.classList.contains("time__list__text")) {
+              let checkedSeans = Number(e.target.dataset.id);
+              localStorage.setItem('checkedSeans', checkedSeans);
+              document.location='./client_hall.html';
+            }
+          })
+        }
+        
+      }
+        }
+      
+      
+    
   })
 }
 
-let months = [
-  'января',
-  'февраля',
-  'марта',
-  'апреля',
-  'мая',
-  'июня',
-  'июля',
-  'августа',
-  'сентября',
-  'октября',
-  'ноября',
-  'декабря'
-]
-searchMonth = months[checkedmonth];
 
 //закрашивает выходные дни
 for(let i = 0; i < menuListItemArr.length; i++) {
@@ -166,11 +206,22 @@ let countRevers = 0;
 //клик по стрелке
 arrowItem.addEventListener('click', () => {
   countOfClick++;
+  today.classList.remove('menu-list-item__checked');
+  today.firstElementChild.classList.remove('text-menu__bold');
+  today.lastElementChild.classList.remove('text-menu__bold');
   today.firstElementChild.textContent = '<';
   today.lastElementChild.textContent = '';
   today.firstElementChild.classList.add("arrow_text");
   today.classList.add("arrow_item");
   revers.classList.remove("today");
+  for(let i = 0; i < menuListItemArr.length; i++) { 
+    if(menuListItemArr[i].classList.contains('menu-list-item__checked')) {
+      menuListItemArr[i].classList.remove('menu-list-item__checked');
+      menuListItemArr[i].classList.add('menu-list-item');
+      menuListItemArr[i].firstElementChild.classList.remove('text-menu__bold');
+      menuListItemArr[i].lastElementChild.classList.remove('text-menu__bold');
+    }
+  }
 
   //меняет числа
   for(let i = 0; i < menuListItemArr.length; i++) { 
@@ -222,6 +273,13 @@ arrowItem.addEventListener('click', () => {
 //клик по реверсной стрелке
 revers.addEventListener('click', () => {
   countRevers++;
+  for(let i = 0; i < menuListItemArr.length; i++) { 
+    if(menuListItemArr[i].classList.contains('menu-list-item__checked')) {
+      menuListItemArr[i].classList.remove('menu-list-item__checked');
+      menuListItemArr[i].firstElementChild.classList.remove('text-menu__bold');
+      menuListItemArr[i].lastElementChild.classList.remove('text-menu__bold');
+    }
+  }
   //меняет числа
   function a() {
     if(countRevers <= countOfClick) {
@@ -250,6 +308,15 @@ revers.addEventListener('click', () => {
       revers.classList.remove("arrow_item");
       revers.classList.add("today");
       today.classList.remove("revers");
+      checkedDate = currentDate.getDate();
+      localStorage.setItem('checkedDate', checkedDate);
+      for(let i = 0; i < menuListItemArr.length; i++) {
+        if(menuListItemArr[i].classList.contains('menu-list-item__checked')) {
+          menuListItemArr[i].classList.remove('menu-list-item__checked');
+          menuListItemArr[i].firstElementChild.classList.remove('text-menu__bold');
+          menuListItemArr[i].lastElementChild.classList.remove('text-menu__bold');
+        }
+      }
     }
   }
   a();
@@ -271,6 +338,7 @@ revers.addEventListener('click', () => {
           }
         }//цикл по дням
       }//осн цикл
+      
     }
     if(countRevers > countOfClick) {
       return;
@@ -289,6 +357,9 @@ revers.addEventListener('click', () => {
        menuListItemArr[i].lastElementChild.classList.remove("menu__weekend");
       }
   }
+  
+  
+
 })//обраб
 
 localStorage.setItem('searchMonth', searchMonth);

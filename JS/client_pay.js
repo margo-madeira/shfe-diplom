@@ -7,7 +7,6 @@ let checkedDate = localStorage.getItem('checkedDate');
 let searchMonth = localStorage.getItem('searchMonth');
 let year = new Date().getFullYear();
 let arrOfRow = [];
-
 const filmName = document.querySelector('.name__payment').firstElementChild;
 const searchPlace = document.querySelector('.place__payment').firstElementChild;
 const hall = document.querySelector('.hall__payment').firstElementChild;
@@ -15,7 +14,7 @@ const time = document.querySelector('.time__payment').firstElementChild;
 const price = document.querySelector(".price__payment").firstElementChild;
 
 //формирует шапку
-let checkedSeans = localStorage.getItem('checkedSeans');
+let checkedSeans = Number(localStorage.getItem('checkedSeans'));
 
 //запрос на сервер
 fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
@@ -52,9 +51,9 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
     btnPay.addEventListener('click', () => {
 
         const formData = new FormData();
-        formData.set('seanceId', `${checkedSeans}`);
-        formData.set('ticketDate', `${checkedDate}-${searchMonth}-${year}`);
-        formData.set('tickets', `${JSON.stringify(tickets)}`);
+        formData.set('seanceId', checkedSeans);
+        formData.set('ticketDate', `${year}-${searchMonth}-${checkedDate}`);
+        formData.set('tickets', JSON.stringify(tickets));
         fetch( 'https://shfe-diplom.neto-server.ru/ticket',{
             method: 'POST',
             body: formData
@@ -62,7 +61,8 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
             .then( response => response.json())
             .then( function(data) {
                 console.log(data);  
+                document.location='./client_ticket.html';
         })  
-        document.location='./client_ticket.html';
+        
     })
 })

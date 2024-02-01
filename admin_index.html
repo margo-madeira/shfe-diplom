@@ -14,7 +14,7 @@
 
 <body>
     <div class="container__addfilm delete__seances">
-        <main class="main__addfilm">
+        <div class="main__addfilm">
             <div class="header__addfilm">
                 <h1 class="heading__addfilm">Удаление сеанса</h1> 
                 <button type="button" class="close__addfilm close_del_seans"></button>
@@ -26,16 +26,16 @@
                     <button class="btn__addfilm btn__white del_seans_cancel">Отменить</button>
                 </div> 
             </div>        
-        </main>
+        </div>
     </div>
 
     <div class="container__addfilm hall">
-        <main class="main__addfilm">
+        <div class="main__addfilm">
             <div class="header__addfilm">
                 <h1 class="heading__addfilm">Добавление зала</h1>
                 <button type="button" class="close__addfilm close_popup_seans"></button>
             </div>
-            <form action="" class="form_addfilm">
+            <form class="form_addfilm">
                 <div class="filds_addfilm">
                     <label class="row">
                         <span class="label__text">Название зала</span>
@@ -47,17 +47,17 @@
                     <button class="btn__addfilm btn__white">Отменить</button>
                 </div>
             </form>
-        </main>
+        </div>
     </div>
 
 
     <div class="container__addfilm film">
-        <main class="main__addfilm">
+        <div class="main__addfilm">
             <div class="header__addfilm">
                 <h1 class="heading__addfilm">Добавление фильма</h1>
                 <button type="button" class="close__addfilm close_popup"></button>
             </div>         
-                <form action="" class="form_addfilm" id="form_film">
+                <form class="form_addfilm" id="form_film">
                     <div class="filds_addfilm">
                         <label class="row">
                             <span class="label__text">Название фильма</span>
@@ -69,7 +69,7 @@
                         </label>
                         <label class="textarea">
                             <span class="label__text">Описание фильма</span>
-                            <textarea type="text" name="filmDescription" class="description"></textarea>
+                            <textarea name="filmDescription" class="description"></textarea>
                         </label>
                         <label class="row">
                             <span class="label__text">Страна</span>
@@ -87,16 +87,16 @@
                         <button class="btn__addfilm btn__white cancel">Отменить</button>
                     </div>
                 </form>
-        </main>
+            </div>
     </div>
 
     <div class="container__addfilm seans">
-        <main class="main__addfilm">
+        <div class="main__addfilm">
             <div class="header__addfilm">
                 <h1 class="heading__addfilm">Добавление сеанса</h1>
                 <button type="button" class="close__addfilm close__addfilm_seanse"></button>
             </div>
-            <form action="" class="form_addfilm form_addfilm_seans">
+            <form class="form_addfilm form_addfilm_seans">
                 <div class="filds_addfilm">
                     <label class="row">
                         <span class="label__text">Название зала</span>
@@ -108,7 +108,7 @@
                     </label>
                     <label class="row" id="name_of_time">
                         <span class="label__text">Время начала</span>
-                        <select class="select__addseans select_time"></select>
+                        <input class="select__addseans select_time">
                     </label>
                 </div>
                 <div class="btn__admin">
@@ -116,7 +116,7 @@
                     <button class="btn__addfilm btn__white btn__addfilm_cancel">Отменить</button>
                 </div>
             </form>
-        </main>
+        </div>
     </div>
 
 
@@ -154,13 +154,13 @@
                     <div class="inp_places-conf">
                         <p class="adm_info">Укажите количество рядов и максимальное количество кресел в ряду:</p>
                         <div class="container_inp">
-                            <label class="rows label_inp">
-                                <p class="numb_text">Рядов, шт</p>
+                            <label class="rows label_inp numb_text">
+                                Рядов, шт
                                 <input type="text" id="rows" class="adm_fild">
                             </label>
                             <p class="size">x</p>
-                            <label class="places label_inp">
-                                <p class="numb_text">Мест, шт</p>
+                            <label class="places label_inp numb_text">
+                                Мест, шт
                                 <input type="text" id="places" class="adm_fild">
                             </label>
                         </div>
@@ -213,8 +213,8 @@
                         <p class="adm_info">Установите цены для типов кресел:</p>
                         <div class="install_price">
                             <div class="conf-step__legend first">
-                                <label class="label_price">
-                                    <p class="numb_text">Цена, рублей</p>
+                                <label class="label_price numb_text">
+                                    Цена, рублей
                                     <input type="text" class="conf-step_inp chip" placeholder="0">
                                 </label>
                                 <p class="text_status block_status">за</p>
@@ -224,8 +224,8 @@
                                 </div>
                             </div>
                             <div class="conf-step__legend second">
-                                <label class="label_price">
-                                    <p class="numb_text">Цена, рублей</p>
+                                <label class="label_price numb_text">
+                                    Цена, рублей
                                     <input type="text" class="conf-step_inp vip" placeholder="0">
                                 </label>
                                 <p class="text_status block_status">за</p>
@@ -252,7 +252,7 @@
                     <h2 class="adm_heading">Сетка сеансов</h2>
                 </div>
                 <div class="adm_wrapper del_seans">
-                    <button class="adm_add-film">
+                    <button class="adm_add-film adds__films">
                         <span class="label_save">Добавить фильм</span>
                     </button>
                     <div class="film__list">    
@@ -291,5 +291,8 @@
             </section>
         </main>
     </div>
-    <script src="./JS/admin_index.js"></script>
+    <script src="./JS/admin_hall.js"></script>
+    <script src="./JS/admin_films.js"></script>
+    <script src="./JS/admin_seances.js"></script>
+    <script src="./JS/admin_server.js"></script>
 </body>

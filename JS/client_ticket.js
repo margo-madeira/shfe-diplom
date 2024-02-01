@@ -29,11 +29,11 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
         let searchPlaces = tickets[i].place;
         let numbOfRows = tickets[i].row;
         arrOfRow.push(numbOfRows);
-         if((i + 1) < tickets.length) {
+        if((i + 1) < tickets.length) {
           placeInHeader.textContent += Array.from(searchPlaces) + ',';
-         } else if((i + 1) === tickets.length) {
+        } else if((i + 1) === tickets.length) {
           placeInHeader.textContent += Array.from(searchPlaces);
-         }
+        }
     }
     let alldata =  {
         дата: `${checkedDate}-${searchMonth}-${year}`,
@@ -44,7 +44,6 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
         место: `${placeInHeader.textContent}`, 
         стоимость: `${searchPrice}`
     }
-    console.log(alldata);
     
     //заносит цену и данные для кодирования
     const qrcode = QRCreator(`${alldata}`, 

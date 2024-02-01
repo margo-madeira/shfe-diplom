@@ -1,4 +1,3 @@
-//запрос на сервер
 const mainIndex = document.querySelector(".main__index");
 let arr = [];
 
@@ -74,7 +73,7 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
     //делает прошед сеансы не активными
     const timeListItem = document.querySelectorAll(".time__list-item");
     const arrTimeListItem = Array.from(timeListItem);
-
+    
     if(Number(checkedDate) === Number(currentDate.getDate())) {//сегодня
       for(let i = 0; i < arrTimeListItem.length; i++) {   
           if(Number(currentDate.getHours()) > Number(arrTimeListItem[i].textContent.slice(0,2))) {//сравнив час
@@ -88,10 +87,12 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
           } 
         }
       }
+    
 
     //при клике на время 
     for(let i = 0; i < arrTimeListItem.length; i++) {
       if(!arrTimeListItem[i].classList.contains("no_active")) {//не для прошедш
+       
         arrTimeListItem[i].addEventListener("click", (e) => {
           if(e.target.classList.contains("time__list-item") || e.target.classList.contains("time__list__text")) {
             let checkedSeans = Number(e.target.dataset.id);
@@ -100,5 +101,7 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
           }
         })
       }
-    }
+      
+      }
+    
 })//запрос
