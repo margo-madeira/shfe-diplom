@@ -26,7 +26,7 @@ const openSellBtn = document.getElementById("open__sell_btn");
 //popup доб зала
 const inp = document.querySelector(".row__text");
 const btnAdd = document.querySelector(".btn__add_hall");
-const btnRemove = document.querySelector(".btn__white");
+const btnRemove = document.querySelector(".btn__delete_halls");
 const closeBtn = document.querySelector(".close_popup_seans");
 const form = document.querySelector(".form_addfilm");
 const addHall = document.querySelector(".hall");
@@ -36,10 +36,13 @@ signal.addEventListener('abort', () => console.log("отмена!"));
 //клик по закрыть в popup зал
 closeBtn.addEventListener('click', () => {
     addHall.classList.remove("container__addfilm_active");  
+    body.classList.remove('hidden');
 })
 //клик отменить в popup зал
 btnRemove.addEventListener('click', (e) => {
   e.preventDefault();
+  addHall.classList.remove("container__addfilm_active"); 
+  body.classList.remove('hidden');
   controller.abort();
   form.reset();
 })
@@ -47,6 +50,7 @@ btnRemove.addEventListener('click', (e) => {
 //переход на popup
 btnAddHall.addEventListener('click', () => {
     containerAddHall.classList.add('container__addfilm_active');
+    body.classList.add('hidden');
 })
 
 //клик по удалить зал

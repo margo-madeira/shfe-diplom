@@ -13,6 +13,7 @@ const filmDuration = document.querySelector(".filmtime");
 const filmDescription = document.querySelector(".description");
 const filmOrigin = document.querySelector(".origin");
 const btnAddsFilms = document.querySelector(".adds__films");
+const body = document.querySelector(".body");
 
 //заполнение листа фильмов
 fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
@@ -50,11 +51,13 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
     //клик на добавить фильм
     btnAddsFilms.addEventListener('click', () => {
       addFilm.classList.add('container__addfilm_active');
+      body.classList.add('hidden');
     })
     
     //клик по крестик
     btnClose.addEventListener('click', () => {
       filmContainer.classList.remove("container__addfilm_active");
+      body.classList.remove('hidden');
     })
 
     //выбор файла poster
@@ -92,5 +95,6 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
       formAddfilm.reset();
       controller.abort();
       filmContainer.classList.remove("container__addfilm_active");
+      body.classList.remove('hidden');
     }) 
      

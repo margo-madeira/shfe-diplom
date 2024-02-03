@@ -93,6 +93,7 @@ function addFilms(file) {
          .then( function(data) {
            console.log(data);  
            filmContainer.classList.remove("container__addfilm_active");
+           body.classList.remove('hidden');
            location.reload();  
          })
 }

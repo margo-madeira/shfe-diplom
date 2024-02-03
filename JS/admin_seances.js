@@ -215,6 +215,7 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
           localStorage.setItem('checkedIdfilmName', `${checkedIdfilmName}`);
           addSeans();
           contSeans.classList.remove("container__addfilm_active");
+          body.classList.remove('hidden');
           formSeans.reset();
         } else {
           return;
@@ -305,6 +306,7 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
         arrForTime.length = 0;
         countOfTime = 0;
         contSeans.classList.remove("container__addfilm_active");
+        body.classList.remove('hidden');
       })
 
       //клик по крестику popup доб сеанса
@@ -317,6 +319,7 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
         arrForTime.length = 0;
         countOfTime = 0;
         contSeans.classList.remove("container__addfilm_active");
+        body.classList.remove('hidden');
       })
 
 
@@ -342,6 +345,7 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
           evt.preventDefault();
           targetHall = evt.target.closest('.conf-step__seances-hall').dataset.id;         
           containerSeans.classList.add("container__addfilm_active");
+          body.classList.add('hidden');
           //формируем разметку select фильмов
           for(let j = 0; j < data.result.films.length; j++) {
             filmNameSeanse.insertAdjacentHTML('beforeend', `<option class="option_addseans name_of_film" data-id="${data.result.films[j].id}">${data.result.films[j].film_name}</option>`);
@@ -382,11 +386,13 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
         evt.preventDefault();
         hiddenDelete.classList.remove("show");
         deleteSeances.classList.add("container__addfilm_active");
+        body.classList.add('hidden');
         labelFilm.textContent = nameFilmLine;
 
         //клик по удалить
         delSeans.addEventListener('click', () => {       
           containerDelSeans.classList.remove("container__addfilm_active");
+          body.classList.remove('hidden');
           activeEl.remove();
           localStorage.removeItem('name');
         })      
@@ -394,12 +400,14 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
       //клик по крестику в удал сеанса
       closeDelSeans.addEventListener("click", () => {
         containerDelSeans.classList.remove("container__addfilm_active");
+        body.classList.remove('hidden');
         localStorage.removeItem('name'); 
       })
      
       //клик по отмене в удал сеанса
       delSeansCancel.addEventListener('click', () => {
         containerDelSeans.classList.remove("container__addfilm_active");
+        body.classList.remove('hidden');
       })
 
       //клик по сохранить сеансы на основ стр
