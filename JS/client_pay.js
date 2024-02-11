@@ -5,7 +5,7 @@ let arrForSumm = [];
 let searchPrice;
 let checkedDate = localStorage.getItem('checkedDate');
 let searchMonth = localStorage.getItem('searchMonth');
-let year = new Date().getFullYear();
+let year = localStorage.getItem('checkedYear');
 let arrOfRow = [];
 const filmName = document.querySelector('.name__payment').firstElementChild;
 const searchPlace = document.querySelector('.place__payment').firstElementChild;
@@ -60,8 +60,13 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
         })
             .then( response => response.json())
             .then( function(data) {
-                console.log(data);  
-                document.location='./client_ticket.html';
+                console.log(data); 
+                if(data.success === true){ 
+                    document.location='./client_ticket.html';
+                } else {
+                    alert('не возможно забронировать места!');
+                    return;
+                }
         })  
         
     })

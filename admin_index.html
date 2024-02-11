@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
     <meta charset="UTF-8">
@@ -13,52 +13,52 @@
 </head>
 
 <body class="body">
-    <div class="container__addfilm delete__seances">
-        <div class="main__addfilm">
-            <div class="header__addfilm">
-                <h1 class="heading__addfilm">Удаление сеанса</h1> 
-                <button type="button" class="close__addfilm close_del_seans"></button>
-            </div>
+    <div class="container__popup delete__seances">
+        <div class="main__adm">
+            <header class="header__popup">
+                <h1 class="heading__popup">Удаление сеанса</h1> 
+                <button type="button" class="close close_del_seans"></button>
+            </header>
             <div class="form_seans">
                 <h2 class="label__text_del">Вы действительно хотите снять с сеанса фильм "<span class="label_delete__seanse"></span>"?</h2>
                 <div class="btn__admin">
-                    <button class="btn__addfilm btn__blue del_seans">Удалить</button>
-                    <button class="btn__addfilm btn__white del_seans_cancel">Отменить</button>
+                    <button class="btn__popup btn__blue del_seans">Удалить</button>
+                    <button class="btn__popup btn__white del_seans_cancel">Отменить</button>
                 </div> 
             </div>        
         </div>
     </div>
 
-    <div class="container__addfilm hall">
-        <div class="main__addfilm">
-            <div class="header__addfilm">
-                <h1 class="heading__addfilm">Добавление зала</h1>
-                <button type="button" class="close__addfilm close_popup_seans"></button>
-            </div>
-            <form class="form_addfilm">
-                <div class="filds_addfilm">
+    <div class="container__popup hall">
+        <div class="main__adm">
+            <header class="header__popup">
+                <h1 class="heading__popup">Добавление зала</h1>
+                <button type="button" class="close close_popup_halls"></button>
+            </header>
+            <form class="form_popup">
+                <div class="filds_popup">
                     <label class="row">
                         <span class="label__text">Название зала</span>
                         <input type="text" class="row__text"  placeholder="Например, «Зал 1»">
                     </label>
                 </div>
                 <div class="btn__admin">
-                    <button class="btn__addfilm btn__blue btn__add_hall">Добавить зал</button>
-                    <button class="btn__addfilm btn__white btn__delete_halls">Отменить</button>
+                    <button class="btn__popup btn__blue btn__add_hall">Добавить зал</button>
+                    <button class="btn__popup btn__white btn__delete_halls">Отменить</button>
                 </div>
             </form>
         </div>
     </div>
 
 
-    <div class="container__addfilm film">
-        <div class="main__addfilm">
-            <div class="header__addfilm">
-                <h1 class="heading__addfilm">Добавление фильма</h1>
-                <button type="button" class="close__addfilm close_popup"></button>
-            </div>         
-                <form class="form_addfilm" id="form_film">
-                    <div class="filds_addfilm">
+    <div class="container__popup film">
+        <div class="main__adm">
+            <header class="header__popup">
+                <h1 class="heading__popup">Добавление фильма</h1>
+                <button type="button" class="close close_popup"></button>
+            </header>         
+                <form class="form_popup" id="form_film">
+                    <div class="filds_popup">
                         <label class="row">
                             <span class="label__text">Название фильма</span>
                             <input type="text" name="filmName" class="filmname row__text" placeholder="Например, «Гражданин Кейн»">
@@ -77,27 +77,27 @@
                         </label>
                     </div>
                     <div class="btn__admin">
-                        <button class="btn__addfilm btn__blue save__film">Добавить фильм</button>
+                        <button class="btn__popup btn__blue save__film">Добавить фильм</button>
                         <div class="input__wrapper">
                             <label class="btn__blue wrap">
-                                <span class="">Загрузить постер</span>
+                                <span>Загрузить постер</span>
                                 <input type="file" name="file" class="poster_add">
                             </label>
                         </div>
-                        <button class="btn__addfilm btn__white cancel">Отменить</button>
+                        <button class="btn__popup btn__white cancel">Отменить</button>
                     </div>
                 </form>
             </div>
     </div>
 
-    <div class="container__addfilm seans">
-        <div class="main__addfilm">
-            <div class="header__addfilm">
-                <h1 class="heading__addfilm">Добавление сеанса</h1>
-                <button type="button" class="close__addfilm close__addfilm_seanse"></button>
-            </div>
-            <form class="form_addfilm form_addfilm_seans">
-                <div class="filds_addfilm">
+    <div class="container__popup seans">
+        <div class="main__adm">
+            <header class="header__popup">
+                <h1 class="heading__popup">Добавление сеанса</h1>
+                <button type="button" class="close close__seanse"></button>
+            </header>
+            <form class="form_popup form_popup_seans">
+                <div class="filds_popup">
                     <label class="row">
                         <span class="label__text">Название зала</span>
                         <select class="select__addseans select_arrow select__addseans_hall"></select>
@@ -112,8 +112,8 @@
                     </label>
                 </div>
                 <div class="btn__admin">
-                    <button class="btn__addfilm btn__blue btn__addfilm_adds">Добавить сеанс</button>
-                    <button class="btn__addfilm btn__white btn__addfilm_cancel">Отменить</button>
+                    <button class="btn__popup btn__blue btn__popup_adds">Добавить сеанс</button>
+                    <button class="btn__popup btn__white btn__popup_cancel">Отменить</button>
                 </div>
             </form>
         </div>
@@ -121,13 +121,13 @@
 
 
     <div class="container_adm-ind">
-        <div class="header_adm-ind">
+        <header class="header_adm-ind">
             <h1 class="header-content">Идём<span class="letter">в</span>кино</h1>
             <p class="text_login">Администраторррская</p>
-        </div>
+        </header>
 
         <main class="main_adm-ind">
-            <section class="adm_config">
+            <section class="admin">
                 <div class="adm_header">
                     <h2 class="adm_heading">Управление залами</h2>
                 </div>
@@ -141,10 +141,10 @@
                 </div>
             </section>
 
-            <section class="adm_config">
-                <div class="adm_header">
+            <section class="admin">
+                <header class="adm_header">
                     <h2 class="adm_heading">Конфигурация залов</h2>
-                </div>
+                </header>
                 <div class="adm_wrapper">
                     <div class="hall-list__conf">
                         <p class="adm_info">Выберите зал для конфигурации:</p>
@@ -199,10 +199,10 @@
                 </div>
             </section>
 
-            <section class="adm_config">
-                <div class="adm_header">
+            <section class="admin">
+                <header class="adm_header">
                     <h2 class="adm_heading">Конфигурация цен</h2>
-                </div>
+                </header>
                 <div class="adm_wrapper">
                     <div class="hall-list__conf">
                         <p class="adm_info">Выберите зал для конфигурации:</p>
@@ -247,18 +247,18 @@
                 </div>
             </section>
 
-            <section class="adm_config">
-                <div class="adm_header">
+            <section class="admin">
+                <header class="adm_header">
                     <h2 class="adm_heading">Сетка сеансов</h2>
-                </div>
-                <div class="adm_wrapper del_seans">
+                </header>
+                <div class="adm_wrapper film_block">
                     <button class="adm_add-film adds__films">
                         <span class="label_save">Добавить фильм</span>
                     </button>
                     <div class="film__list">    
                     </div>
                     <div class="time-line__list">
-                            <img class="hidden_delete" src="./images/delete_film.png" alt="корзина"> 
+                        <img class="hidden_delete" src="./images/delete_film.png" alt="корзина"> 
                     </div>
                     <div class="adm__btns">
                         <button class="delete delete_film_seanse admin__btn">
@@ -271,10 +271,10 @@
                 </div>
             </section>
 
-            <section class="adm_config">
-                <div class="adm_header">
+            <section class="admin">
+                <header class="adm_header">
                     <h2 class="adm_heading">Открыть продажи</h2>
-                </div>
+                </header>
                 <div class="adm_wrapper">
                     <div class="hall-list">
                         <p class="adm_info">Выберите зал для открытия/закрытия продаж:</p>

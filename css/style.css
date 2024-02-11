@@ -756,7 +756,7 @@ body {
 
 
 
-.container__addfilm {
+.container__popup {
   background-color: rgba(0, 0, 0, 0.6);
   width: 100%;
   height: 100vh;;
@@ -770,19 +770,19 @@ body {
   z-index: 3;
 }
 
-.container__addfilm_active {
+.container__popup_active {
   display: flex;
   position: fixed;
 }
 
-.main__addfilm {
+.main__adm {
   width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
 }
 
-.header__addfilm {
+.header__popup {
   display: flex;
   padding: 16px 42px 14px 42px;
   justify-content: space-between;
@@ -790,7 +790,7 @@ body {
   background: #63536C;
 }
 
-.heading__addfilm {
+.heading__popup {
   color: #FFF;
   font-size: 22px;
   font-weight: bold;
@@ -798,7 +798,7 @@ body {
   text-transform: uppercase;
 }
 
-.close__addfilm {
+.close {
   width: 22px;
   height: 22px;
   background: url(../images/close.png.png);
@@ -806,11 +806,11 @@ body {
   cursor: pointer;
 }
 
-.form_addfilm {
+.form_popup {
   background: rgba(234, 233, 235, 0.95);
 }
 
-.filds_addfilm {
+.filds_popup {
   display: flex;
   padding: 16px 8px;
   flex-direction: column;
@@ -914,7 +914,7 @@ body {
 }
 
 
-.btn__addfilm {
+.btn__popup {
   display: flex;
   width: 200px;
   height: 40px;
@@ -1143,7 +1143,7 @@ body {
   box-sizing: border-box;
 }
 
-.adm_config {
+.admin {
   display: flex;
   flex-direction: column;
   background: rgba(234, 233, 235, 0.95);
@@ -1758,13 +1758,11 @@ body {
   flex-wrap: wrap;
   align-self: stretch;
   align-items: center;
- 
 }
 
 .conf-step__seances-movie {
   display: flex;
   box-sizing: border-box;
-  min-width: 60px;
   max-width: 80px;
   height: 40px;
   padding: 10px;
@@ -1792,6 +1790,8 @@ body {
   font-size: 10px;
   font-weight: 400;
   line-height: 10px;
+  overflow: hidden;
+  hyphens: auto;
 }
 
 .movie-start {
@@ -1879,7 +1879,7 @@ body {
     margin: 30px auto;
   }
 
-  .container__addfilm {
+  .container__popup {
     padding: 14px 0;
   }
 
@@ -1988,7 +1988,7 @@ body {
     margin: 0 auto;
   }
 
-  .main__addfilm {
+  .main__adm {
     max-width: 960px;
     margin: 0 auto;
   }

@@ -7,9 +7,10 @@ const today = document.querySelector(".today");
 let currentDate = new Date();
 let count = 1;
 const revers = document.querySelector(".revers");
-let checkedDate;
+let checkedDate;//число выбранное
 let checkedmonth;
-let searchMonth;
+let searchMonth;//месяц выбранный
+let checkedYear;
 
 //при открытии стр выделяет today
 today.classList.add("menu-list-item__checked");
@@ -26,7 +27,9 @@ if(today.classList.contains("menu-list-item__checked")) {
   } else {
     searchMonth = checkedmonth + 1;
   }
+  checkedYear = currentDate.getFullYear();
   localStorage.setItem('checkedDate', checkedDate);
+  localStorage.setItem('checkedYear', checkedYear);
 }
 
 
@@ -98,8 +101,8 @@ for(let i = 0; i < menuListItemArr.length; i++) {
   if((Number(currentDate.getDate()) + count) <= dayOFMonth) {
     menuListItemArr[i].lastElementChild.textContent = Number(currentDate.getDate()) + count;
     count++; 
-    //checkedmonth = currentDate.getMonth(); 
     menuListItemArr[i].dataset.id = currentDate.getMonth();
+    menuListItemArr[i].dataset.year = currentDate.getFullYear();
   } else {
     break;
   }
@@ -109,8 +112,12 @@ let anotherCount = 1;
 for(let i = count - 1; i < menuListItemArr.length; i++) {
   menuListItemArr[i].lastElementChild.textContent = anotherCount;
   anotherCount++;
-  //checkedmonth = currentDate.getMonth() + 1;
   menuListItemArr[i].dataset.id = currentDate.getMonth() + 1;
+  if(checkedmonth === 11) {
+    menuListItemArr[i].dataset.year = currentDate.getFullYear() + 1;
+  } else {
+    menuListItemArr[i].dataset.year = currentDate.getFullYear();
+  }
 }
 
 //простав checkedDate у today
@@ -141,6 +148,7 @@ for(let i = 0; i < menuListItemArr.length; i++) {
     
     if(menuListItemArr[i].classList.contains("menu-list-item__checked")) {
       checkedDate = menuListItemArr[i].lastElementChild.textContent;
+      checkedYear = menuListItemArr[i].dataset.year;
       if(Number(checkedDate) < 10) {
         checkedDate = "0" + checkedDate;
       }
@@ -229,6 +237,11 @@ arrowItem.addEventListener('click', () => {
       menuListItemArr[i].lastElementChild.textContent = Number(menuListItemArr[i].lastElementChild.textContent) + 1; 
     } else {
       menuListItemArr[i].lastElementChild.textContent = '1';
+      if(menuListItemArr[i].dataset.id === '11') {
+        menuListItemArr[i].dataset.year = currentDate.getFullYear() + 1;
+        menuListItemArr[i].dataset.id = 0;
+      }
+      menuListItemArr[i].dataset.id = Number(menuListItemArr[i].dataset.id) + 1;
     }
   }
 
@@ -289,6 +302,11 @@ revers.addEventListener('click', () => {
         menuListItemArr[i].lastElementChild.textContent = Number(menuListItemArr[i].lastElementChild.textContent) - 1; 
         } else {
           menuListItemArr[i].lastElementChild.textContent = dayOFMonth;
+          if(menuListItemArr[i].dataset.id === '0') {
+            menuListItemArr[i].dataset.year = currentDate.getFullYear() - 1;
+            menuListItemArr[i].dataset.id = 11;
+          }
+          menuListItemArr[i].dataset.id = Number(menuListItemArr[i].dataset.id) - 1;
         }
       }
     }
@@ -309,7 +327,20 @@ revers.addEventListener('click', () => {
       revers.classList.add("today");
       today.classList.remove("revers");
       checkedDate = currentDate.getDate();
+    
+      if(checkedDate < 10) {
+        checkedDate = "0" + checkedDate;
+      }
+      checkedmonth = currentDate.getMonth();
+      if(checkedmonth < 9) {
+        searchMonth = "0" + (checkedmonth + 1);
+      } else {
+        searchMonth = checkedmonth + 1;
+      }
+      checkedYear = currentDate.getFullYear();
       localStorage.setItem('checkedDate', checkedDate);
+      localStorage.setItem('checkedYear', checkedYear);
+      
       for(let i = 0; i < menuListItemArr.length; i++) {
         if(menuListItemArr[i].classList.contains('menu-list-item__checked')) {
           menuListItemArr[i].classList.remove('menu-list-item__checked');
@@ -363,3 +394,4 @@ revers.addEventListener('click', () => {
 })//обраб
 
 localStorage.setItem('searchMonth', searchMonth);
+localStorage.setItem('checkedYear', checkedYear);

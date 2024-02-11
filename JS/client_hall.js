@@ -10,6 +10,8 @@ let ticket;
 let coast;
 let numbOfRow;
 let numbOfPlace;
+let day = localStorage.getItem('checkedDate');//число
+let month = localStorage.getItem('searchMonth');
 
 
 //тап по экрану
@@ -41,14 +43,11 @@ main.addEventListener('touchend', () => {
         hallNumber.textContent = data.result.halls[ findHallId].hall_name;
 
         //загружает конфигурацию зала
-        let currentDate = new Date();
-        let today = currentDate.getDate();
-        let month = currentDate.getMonth();
-        let fullYear = currentDate.getFullYear();
+        let fullYear = localStorage.getItem('checkedYear');
         let seanceId = Number(checkedSeans);
-        let checkedDate = toString(fullYear-month-today);
+        let checkDate = fullYear + '-' + month + '-' + day;
 
-        fetch( `https://shfe-diplom.neto-server.ru/hallconfig?seanceId=${seanceId}&date=${checkedDate}` )
+        fetch( `https://shfe-diplom.neto-server.ru/hallconfig?seanceId=${seanceId}&date=${checkDate}` )
         
             .then( response => response.json())
             .then( function(data) {
@@ -83,38 +82,40 @@ main.addEventListener('touchend', () => {
             
             //при выборе мест 
             places.addEventListener('click', (e) => {
-               
-                if(e.target.classList.contains("check_blue")) {//снимает голубой цвет
-                    if(e.target.closest('.place_of_scheme').dataset.id === "vip") {
+                if(((e.target.closest('.place_of_scheme').dataset.id !== 'taken') && (e.target.dataset.id !== 'taken')) && ((e.target.closest('.place_of_scheme').dataset.id !== 'disabled') && (e.target.dataset.id !== 'disabled'))) {
+                
+                    if(e.target.classList.contains("check_blue")) {//снимает голубой цвет
+                        if(e.target.closest('.place_of_scheme').dataset.id === "vip") {
+                            if(e.target.classList.contains("place_of_scheme")) {
+                                e.target.firstElementChild.src = './images/свободно_вип.png';
+                                e.target.firstElementChild.classList.remove("check_blue");
+                            }
+                            if(e.target.classList.contains("img_place_scheme")) {
+                                e.target.src = './images/свободно_вип.png';
+                                e.target.classList.remove("check_blue");
+                            } 
+                        }
+                        if(e.target.closest('.place_of_scheme').dataset.id === "standart") {
+                            if(e.target.classList.contains("place_of_scheme")) {
+                                e.target.firstElementChild.src = './images/свободно.png';
+                                e.target.firstElementChild.classList.remove("check_blue");
+                            }
+                            if(e.target.classList.contains("img_place_scheme")) {
+                                e.target.src = './images/свободно.png';
+                                e.target.classList.remove("check_blue");
+                            } 
+                        } 
+                    } else {//отмечает голубым
                         if(e.target.classList.contains("place_of_scheme")) {
-                            e.target.firstElementChild.src = './images/свободно_вип.png';
-                            e.target.firstElementChild.classList.remove("check_blue");
+                            e.target.firstElementChild.src = './images/выбрано.png';
+                            e.target.firstElementChild.classList.add("check_blue");
                         }
                         if(e.target.classList.contains("img_place_scheme")) {
-                            e.target.src = './images/свободно_вип.png';
-                            e.target.classList.remove("check_blue");
-                        } 
-                    }
-                    if(e.target.closest('.place_of_scheme').dataset.id === "standart") {
-                        if(e.target.classList.contains("place_of_scheme")) {
-                            e.target.firstElementChild.src = './images/свободно.png';
-                            e.target.firstElementChild.classList.remove("check_blue");
+                            e.target.src = './images/выбрано.png';
+                            e.target.classList.add("check_blue");
                         }
-                        if(e.target.classList.contains("img_place_scheme")) {
-                            e.target.src = './images/свободно.png';
-                            e.target.classList.remove("check_blue");
-                        } 
-                    } 
-                } else {
-                    if(e.target.classList.contains("place_of_scheme")) {
-                        e.target.firstElementChild.src = './images/выбрано.png';
-                        e.target.firstElementChild.classList.add("check_blue");
-                    }
-                    if(e.target.classList.contains("img_place_scheme")) {
-                        e.target.src = './images/выбрано.png';
-                        e.target.classList.add("check_blue");
-                    }
-                }      
+                    }  
+                }    
             })//клик по месту 
        
         
