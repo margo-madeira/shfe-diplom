@@ -15,23 +15,24 @@ let numbOfPlace;
 let day = localStorage.getItem('checkedDate');//число
 let month = localStorage.getItem('searchMonth');
 
-
 //тап по экрану увеличивает масштаб
 let touchCount = 0;
 let reversTouchCount = 0;
 
 buyingInfo.addEventListener('click', () => {
-    touchCount++;
-    if((reversTouchCount %2 !== 0) && (reversTouchCount !== 0) && (touchCount %2 === 0)) {
-        body.style.width = (Number(body.getBoundingClientRect().width) / 1.5) + 'px';
-        touchCount = 0;
-        reversTouchCount = 0;
-        return;
+    if((Number(body.getBoundingClientRect().width)) < 1199) {
+        touchCount++;
+        if((reversTouchCount %2 !== 0) && (reversTouchCount !== 0) && (touchCount %2 === 0)) {
+            body.style.width = (Number(body.getBoundingClientRect().width) / 1.5) + 'px';
+            touchCount = 0;
+            reversTouchCount = 0;
+            return;
+        }
+        if(touchCount %2 === 0) {
+            body.style.width = (Number(body.getBoundingClientRect().width) * 1.5) + 'px';
+            reversTouchCount++;
+        } 
     }
-    if(touchCount %2 === 0) {
-        body.style.width = (Number(body.getBoundingClientRect().width) * 1.5) + 'px';
-        reversTouchCount++;
-    } 
 })
 
 //запрос на сервер
