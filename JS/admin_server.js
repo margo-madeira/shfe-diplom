@@ -65,6 +65,7 @@ function saveConfig(hallConfId, arrayConfig) {
                 admschemeTap.removeChild(admschemeTap.firstElementChild);
                 admschemeTap.insertAdjacentHTML('beforeend', `<div class="scheme_of_hall"></div>`);
                 const schemeOfHall = document.querySelector('.scheme_of_hall');
+                
                 data.result.hall_config.forEach(element => {
                   schemeOfHall.insertAdjacentHTML('beforeend', `<div class="conf-step__row"></div>`);
                 });
@@ -74,6 +75,8 @@ function saveConfig(hallConfId, arrayConfig) {
                     confStepRow[i].insertAdjacentHTML('beforeend', `<div class="conf-step__chair" data-id="${data.result.hall_config[i][j]}"><img src="" class=""></div>`);
                   }
                 }//закр цикл
+                rows.value = confStepRow.length;
+                places.value = data.result.hall_config[0].length;
                 const confStepChair = Array.from(document.querySelectorAll(".conf-step__chair"));
             
                 for(let i = 0; i < confStepChair.length; i++) {
@@ -126,31 +129,48 @@ function openHalls(serchIndOpen, hallOpenId) {
         .then( response => response.json())
         .then( function(data) { 
           console.log( data );
-          location.reload();
-        })
-           
-}
+          if(data.success === true) {
+            //рисует на кнопке при не обновленной странице
+            const btnOpen = document.getElementById("btn_open");
+            const hallItemOpen = Array.from(document.querySelectorAll(".hall_item__open"));
+            if(serchIndOpen === 0) {
+              btnOpen.textContent = 'Открыть продажу билетов';
+            } else {
+              btnOpen.textContent = 'Приостановить продажу билетов';
+            }
+            for(let i = 0; i < hallItemOpen.length; i++) { 
+              if(Number(hallItemOpen[i].dataset.id) === Number(hallOpenId)) {
+                if(hallItemOpen[i].dataset.change === 'true') {
+                  delete hallItemOpen[i].dataset.change;
+                } else {
+                  hallItemOpen[i].dataset.change = 'true';
+                }
+              }
+            }
+          }
+        })        
+      }
 
 function addFilms(file) {
   const formData = new FormData();
   let numbDuration = Number(filmDuration.value);
-        formData.set('filmName', `${filmName.value}`);
-        formData.set('filmDuration', numbDuration);
-        formData.set('filmDescription', `${filmDescription.value}`);
-        formData.set('filmOrigin', `${filmOrigin.value}`);
-        formData.set('filePoster', file);
-      
-       fetch( 'https://shfe-diplom.neto-server.ru/film',{
-         method: 'POST',
-         body: formData
-       })
-         .then( response => response.json())
-         .then( function(data) {
-           console.log(data);  
-           filmContainer.classList.remove("container__popup_active");
-           body.classList.remove('hidden');
-           location.reload();  
-         })
+  formData.set('filmName', `${filmName.value}`);
+  formData.set('filmDuration', numbDuration);
+  formData.set('filmDescription', `${filmDescription.value}`);
+  formData.set('filmOrigin', `${filmOrigin.value}`);
+  formData.set('filePoster', file);
+        
+  fetch( 'https://shfe-diplom.neto-server.ru/film',{
+    method: 'POST',
+    body: formData
+  })
+    .then( response => response.json())
+    .then( function(data) {
+      console.log(data);  
+      filmContainer.classList.remove("container__popup_active");
+      body.classList.remove('hidden');
+      location.reload();  
+    })
 }
 
 function delFilms(filmId) {

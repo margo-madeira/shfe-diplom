@@ -1763,7 +1763,6 @@ body {
 .conf-step__seances-movie {
   display: flex;
   box-sizing: border-box;
-  max-width: 80px;
   height: 40px;
   padding: 10px;
   flex-direction: column;
@@ -1791,7 +1790,7 @@ body {
   font-weight: 400;
   line-height: 10px;
   overflow: hidden;
-  hyphens: auto;
+  word-break: break-all;
 }
 
 .movie-start {

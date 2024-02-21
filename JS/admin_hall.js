@@ -7,7 +7,8 @@ const btnDeleteHall = Array.from(document.querySelectorAll(".btn_remove"));
 const hallConfigList = document.querySelector(".ul_hall__config");
 const rows = document.getElementById("rows");
 const places = document.getElementById("places");
-const btnDeleteConfig = document.querySelector(".delete_config__btn");
+//const btnDeleteConfig = document.querySelector(".del_config__btn");
+const btnDelConf = document.querySelector(".del_conf");
 const btnSaveConfig = document.querySelector(".save_config__btn");
 let controller = new AbortController();
 let signal = controller.signal;
@@ -32,8 +33,6 @@ const form = document.querySelector(".form_popup");
 const addHall = document.querySelector(".hall");
 
 function allForHalls(data) {
-  signal.addEventListener('abort', () => console.log("отмена!"));
-
   //клик по закрыть в popup зал
   closeBtn.addEventListener('click', () => {
       addHall.classList.remove("container__popup_active");  
@@ -42,9 +41,10 @@ function allForHalls(data) {
   //клик отменить в popup зал
   btnRemove.addEventListener('click', (e) => {
     e.preventDefault();
+    controller.abort();
+    console.log('Download aborted');
     addHall.classList.remove("container__popup_active"); 
     body.classList.remove('hidden');
-    controller.abort();
     form.reset();
   })
 
@@ -87,8 +87,13 @@ function allForHalls(data) {
 
     //клик по добавить зал
     btnAdd.addEventListener('click', (e) => {
-      e.preventDefault();
-      addHalls(inp.value); 
+      if(inp.value.trim()) {
+        e.preventDefault();
+        addHalls(inp.value); 
+      } else {
+        e.preventDefault();
+        alert('заполните поле');
+      }
     })
 
     //изменяет конфигурацию
@@ -111,12 +116,14 @@ function allForHalls(data) {
           schemeOfHall.insertAdjacentHTML('beforeend', `<div class="conf-step__row"></div>`);
         });
         const confStepRow = Array.from(document.querySelectorAll(".conf-step__row"));
+        rows.value = confStepRow.length;
         for(let j = 0; j < confStepRow.length; j++) {
           for(let k = 0; k < data.result.halls[indHall].hall_config[0].length; k++) {
             confStepRow[j].insertAdjacentHTML('beforeend', `<div class="conf-step__chair" data-id="${data.result.halls[indHall].hall_config[j][k]}"><img src="" class=""></div>`);
           }
         }//закр цикл
         const confStepChair = Array.from(document.querySelectorAll(".conf-step__chair"));
+        places.value = confStepChair.length / rows.value;
           
         for(let j = 0; j < confStepChair.length; j++) {
           if(confStepChair[j].dataset.id === "vip") {
@@ -145,31 +152,37 @@ function allForHalls(data) {
           }
         }       
         addScheme();
-        //очищает поля ввода
-        rows.value = "";
-        places.value = "";
       })//клик по залу
     }//цикл conf
 
+    const containerInp = document.querySelector(".container_inp");
     //вводится новое значение рядов
-    places.addEventListener('input', () => {
-      if(rows.value.trim() && places.value.trim()) {
-        //удалить старую разметку
-        admschemeTap.removeChild(admschemeTap.firstElementChild);
-        admschemeTap.insertAdjacentHTML('beforeend', `<div class="scheme_of_hall"></div>`);
-        for(let j = 0; j < rows.value; j++) {
-          const schemeOfHall = document.querySelector(".scheme_of_hall") ;
-          schemeOfHall.insertAdjacentHTML('beforeend', `<div class="conf-step__row"></div>`);
-          arrayConfig.push(new Array());
-        } 
-        const arrForRow = Array.from(document.querySelectorAll(".conf-step__row"));
-        for(let j = 0; j < arrForRow.length; j++) {
-          for(let k = 0; k < places.value; k++){
-            arrForRow[j].insertAdjacentHTML('beforeend', `<div class="conf-step__chair" data-id="disabled"><img src="./images/adm__chair2.png" class=""></div>`);
-            arrayConfig[j].push("disabled");
+    containerInp.addEventListener('input', (e) => {
+        if(isFinite(rows.value) &&  isFinite(places.value)) {
+          if(rows.value.trim() && places.value.trim()) {
+            //удалить старую разметку
+            admschemeTap.removeChild(admschemeTap.firstElementChild);
+            arrayConfig.length = 0;
+            admschemeTap.insertAdjacentHTML('beforeend', `<div class="scheme_of_hall"></div>`);
+            for(let j = 0; j < rows.value; j++) {
+              const schemeOfHall = document.querySelector(".scheme_of_hall") ;
+              schemeOfHall.insertAdjacentHTML('beforeend', `<div class="conf-step__row"></div>`);
+              arrayConfig.push(new Array());
+            } 
+            const arrForRow = Array.from(document.querySelectorAll(".conf-step__row"));
+            for(let j = 0; j < arrForRow.length; j++) {
+              for(let k = 0; k < places.value; k++){
+                arrForRow[j].insertAdjacentHTML('beforeend', `<div class="conf-step__chair" data-id="disabled"><img src="./images/adm__chair2.png" class=""></div>`);
+                arrayConfig[j].push("disabled");
+              }
+            }
           }
+        } else {
+          alert('не корректное значение!');
+          e.target.value = "";
+          return;
         }
-      }
+      
 
       //при клике по схеме мест
       const arrForChair = Array.from(document.querySelectorAll(".conf-step__chair"));
@@ -198,17 +211,19 @@ function allForHalls(data) {
       }
 
       //клик по отмена в конфиг
-      btnDeleteConfig.addEventListener('click', () => {
-        rows.value = "";
-        places.value = "";
-        admschemeTap.removeChild(schemeOfHall);
-        confStepRow.length = 0;
-        arrForRow.length = 0;
+      btnDelConf.addEventListener('click', () => {
         controller.abort();
+        console.log('Download aborted');
+        addScheme();
       })
       //клик по сoхранить
       btnSaveConfig.addEventListener('click', () => {
-        saveConfig(hallConfId, arrayConfig);
+        if((Number(rows.value) !== 0) && (Number(places.value) !== 0)) { 
+          saveConfig(hallConfId, arrayConfig);
+        } else {
+          alert('не может быть нулем');
+          return;
+        }
       })
     })
         
@@ -253,20 +268,28 @@ function allForHalls(data) {
     saveBtnPrice.addEventListener('click', (e) => {
       e.preventDefault();
       const params = new FormData();
-      if(inpChip.value.trim()) { 
+      if(inpChip.value.trim() && inpVip.value.trim() && (Number(inpChip.value) !== 0) && (Number(inpVip.value) !== 0)) { 
+        if(isFinite(inpChip.value) &&  isFinite(inpVip.value)) {
         priceStandart = inpChip.value; 
         params.set('priceStandart', `${priceStandart}`);
-      }  
-      if(inpVip.value.trim()) {
         priceVip = inpVip.value;
         params.set('priceVip', `${priceVip}`);
-      } 
-      addPrice(hallPriceId, params);
+        addPrice(hallPriceId, params);
+        } else {
+          alert('не корректное значение');
+        return;
+        }
+      } else {
+        alert('введите значение');
+        return;
+        
+      }
     })
         
     //клик по отменить
     deleteBtnPrice.addEventListener('click', () => {
       controller.abort();
+      console.log('Download aborted');
     })
       
 
@@ -296,7 +319,7 @@ function allForHalls(data) {
 
     //клик по залу
     for(let i = 0; i < hallItemOpen.length; i++) {  
-      hallItemOpen[i].addEventListener('click', () => {
+      hallItemOpen[i].addEventListener('click', () => {  
         hallItemOpen[i].classList.add("hall_item_checked");
         hallItemOpen[i].classList.remove("hall_item");
         hallOpenId = hallItemOpen[i].dataset.id;
@@ -308,21 +331,34 @@ function allForHalls(data) {
         }
         for(let j = 0; j < data.result.halls.length; j++) {
           if(data.result.halls[j].id === Number(hallOpenId)) {
-            indif = data.result.halls[j].hall_open;//на данный момент
+            if( hallItemOpen[i].dataset.change === 'true') {  
+              if(data.result.halls[j].hall_open === 0) {
+                indif = 1;
+              } else {
+                indif = 0;
+              }
+            } else {
+              indif = data.result.halls[j].hall_open;//на данный момент
+            }
           }
         }
         if(indif === 0) {
           btnOpen.textContent = 'Открыть продажу билетов';
           serchIndOpen = 1;
         } else {
-          btnOpen.textContent = 'Приостановить продажу билетов'
+          btnOpen.textContent = 'Приостановить продажу билетов';
           serchIndOpen = 0;
-        }
+        }  
       })//клик по залу
     }
     
     //клик по кнопке
     openSellBtn.addEventListener('click', () => {
       openHalls(serchIndOpen, hallOpenId);
+      if(indif === 0) {
+        indif = 1;
+      } else {
+        indif = 0;
+      }
     })
   }

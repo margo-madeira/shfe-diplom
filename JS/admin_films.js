@@ -1,6 +1,5 @@
 const filmList = document.querySelector(".film__list");
 const admFilm = document.querySelectorAll(".adm_film");
-signal.addEventListener('abort', () => console.log("отмена!"));
 //popup доб фильм
 const btnClose = document.querySelector(".close_popup");
 const btnAddsFilm = document.querySelector(".save__film");
@@ -47,7 +46,7 @@ function allForFilms(data) {
   //клик на добавить фильм
   btnAddsFilms.addEventListener('click', () => {
     addFilm.classList.add('container__popup_active');
-    body.classList.add('hidden');
+    body.classList.add('hidden');//убирает прокрутку осн страницы
   })
       
   //клик по крестик
@@ -71,7 +70,17 @@ function allForFilms(data) {
 
   //клик по сохр фильм на страницу и на сервер
   btnAddsFilm.addEventListener('click', (e) => {
-    addFilms(file); 
+    if(filmName.value.trim() && filmDescription.value.trim() && filmOrigin.value.trim() && file) {
+      if(filmDuration.value.trim() && (Number(filmDuration.value) !== 0) && isFinite(filmDuration.value)) {
+        addFilms(file); 
+      } else {
+        e.preventDefault();
+        alert('продолжительность должна быть в цифрах');
+      }
+    } else {
+      e.preventDefault();//отменяет перезагр страницы
+      alert('заполните все поля');
+    }
   })
 
   //кнопки удалить фильм
@@ -90,6 +99,7 @@ function allForFilms(data) {
     e.preventDefault();
     formAddfilm.reset();
     controller.abort();
+    console.log('Download aborted');
     filmContainer.classList.remove("container__popup_active");
     body.classList.remove('hidden');
   }) 
