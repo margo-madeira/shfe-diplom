@@ -130,20 +130,21 @@ function openHalls(serchIndOpen, hallOpenId) {
         .then( function(data) { 
           console.log( data );
           if(data.success === true) {
-            //рисует на кнопке при не обновленной странице
             const btnOpen = document.getElementById("btn_open");
             const hallItemOpen = Array.from(document.querySelectorAll(".hall_item__open"));
-            if(serchIndOpen === 0) {
-              btnOpen.textContent = 'Открыть продажу билетов';
-            } else {
-              btnOpen.textContent = 'Приостановить продажу билетов';
-            }
+    
             for(let i = 0; i < hallItemOpen.length; i++) { 
               if(Number(hallItemOpen[i].dataset.id) === Number(hallOpenId)) {
-                if(hallItemOpen[i].dataset.change === 'true') {
-                  delete hallItemOpen[i].dataset.change;
+                if(hallItemOpen[i].dataset.open === '0') {
+                  hallItemOpen[i].dataset.open = 1;
                 } else {
-                  hallItemOpen[i].dataset.change = 'true';
+                  hallItemOpen[i].dataset.open = 0;
+                }
+
+                if(hallItemOpen[i].dataset.open === '0') {
+                  btnOpen.textContent = 'Открыть продажу билетов';
+                } else {
+                  btnOpen.textContent = 'Приостановить продажу билетов';
                 }
               }
             }

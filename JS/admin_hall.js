@@ -41,8 +41,7 @@ function allForHalls(data) {
   //клик отменить в popup зал
   btnRemove.addEventListener('click', (e) => {
     e.preventDefault();
-    controller.abort();
-    console.log('Download aborted');
+    //controller.abort();
     addHall.classList.remove("container__popup_active"); 
     body.classList.remove('hidden');
     form.reset();
@@ -160,6 +159,8 @@ function allForHalls(data) {
     containerInp.addEventListener('input', (e) => {
         if(isFinite(rows.value) &&  isFinite(places.value)) {
           if(rows.value.trim() && places.value.trim()) {
+            btnDelConf.removeAttribute('disabled');
+            btnSaveConfig.removeAttribute('disabled');
             //удалить старую разметку
             admschemeTap.removeChild(admschemeTap.firstElementChild);
             arrayConfig.length = 0;
@@ -212,8 +213,6 @@ function allForHalls(data) {
 
       //клик по отмена в конфиг
       btnDelConf.addEventListener('click', () => {
-        controller.abort();
-        console.log('Download aborted');
         addScheme();
       })
       //клик по сoхранить
@@ -263,7 +262,11 @@ function allForHalls(data) {
         showPrice();
       })
     }
-
+    const installPriceBlock = document.querySelector(".install_price");
+    installPriceBlock.addEventListener('change', (e) => {
+      saveBtnPrice.removeAttribute('disabled');
+      deleteBtnPrice.removeAttribute('disabled');
+    })
     //клик по сoхранить
     saveBtnPrice.addEventListener('click', (e) => {
       e.preventDefault();
@@ -288,33 +291,34 @@ function allForHalls(data) {
         
     //клик по отменить
     deleteBtnPrice.addEventListener('click', () => {
-      controller.abort();
-      console.log('Download aborted');
+      
+      inpChip.value = "";
+      inpVip.value = "";
+      showPrice();
     })
       
 
     //закрытие продаж
     const hallItemOpen = Array.from(document.querySelectorAll(".hall_item__open"));
     let hallOpenId;
-    let serchIndOpen;
-    let indif;
 
     hallItemOpen[0].classList.add("hall_item_checked");
     hallItemOpen[0].classList.remove("hall_item");
     hallOpenId = hallItemOpen[0].dataset.id;
     
     //открыт ли выбранный зал
-    for(let j = 0; j < data.result.halls.length; j++) {
-      if(data.result.halls[j].id === Number(hallOpenId)) {
-        indif = data.result.halls[j].hall_open;//на данный момент
+    for(let i = 0; i < data.result.halls.length; i++) {
+      for(let j = 0; j < hallItemOpen.length; j++) {
+        if(data.result.halls[i].id === Number(hallItemOpen[j].dataset.id)) {
+          hallItemOpen[j].dataset.open = data.result.halls[i].hall_open;//на данный момент
+        }
       }
     }
-    if(indif === 0) {
+
+    if(hallItemOpen[0].dataset.open === '0') {
       btnOpen.textContent = 'Открыть продажу билетов';
-      serchIndOpen = 1;
     } else {
       btnOpen.textContent = 'Приостановить продажу билетов'
-      serchIndOpen = 0;
     }
 
     //клик по залу
@@ -329,36 +333,28 @@ function allForHalls(data) {
             hallItemOpen[j].classList.add("hall_item");
           }
         }
-        for(let j = 0; j < data.result.halls.length; j++) {
-          if(data.result.halls[j].id === Number(hallOpenId)) {
-            if( hallItemOpen[i].dataset.change === 'true') {  
-              if(data.result.halls[j].hall_open === 0) {
-                indif = 1;
-              } else {
-                indif = 0;
-              }
-            } else {
-              indif = data.result.halls[j].hall_open;//на данный момент
-            }
-          }
-        }
-        if(indif === 0) {
+        
+        if(hallItemOpen[i].dataset.open === '0') {
           btnOpen.textContent = 'Открыть продажу билетов';
-          serchIndOpen = 1;
         } else {
           btnOpen.textContent = 'Приостановить продажу билетов';
-          serchIndOpen = 0;
         }  
       })//клик по залу
     }
     
+    let serchIndOpen;
     //клик по кнопке
     openSellBtn.addEventListener('click', () => {
-      openHalls(serchIndOpen, hallOpenId);
-      if(indif === 0) {
-        indif = 1;
-      } else {
-        indif = 0;
+      for(let i = 0; i < hallItemOpen.length; i++) { 
+        if(Number(hallItemOpen[i].dataset.id) === Number(hallOpenId)) {
+          if(hallItemOpen[i].dataset.open === '0') {
+            serchIndOpen = 1;
+          } else {
+            serchIndOpen = 0;
+          }
+        }
+        
       }
+      openHalls(serchIndOpen, hallOpenId);
     })
-  }
+}

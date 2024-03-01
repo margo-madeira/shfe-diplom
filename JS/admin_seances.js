@@ -22,9 +22,7 @@ const hallNameSeanse = document.querySelector(".select__addseans_hall");
 const timeNameSeanse = document.querySelector('.select_time');
 const btnAdds = document.querySelector(".btn__popup_adds");
 let arrr = [];//дублирует все сеансы
-let arrForTime = [];
 let checkFilmDuration;
-let resultForTime = [];
 let diffrens;
 let result;
 let checkedIdHall;
@@ -70,6 +68,55 @@ function allForSeances(data) {
     return a.seance_time.replace(':', '') - b.seance_time.replace(':', '');
   });
       
+  for(let i = 0; i < arrr.length; i++) {
+    let indFilm = data.result.films.findIndex(el => el.id === Number(arrr[i].seance_filmid));
+    for(let j = 0; j < confStepSeancesHall.length; j++) {
+      if(Number(arrr[i].seance_hallid) === Number(confStepSeancesHall[j].dataset.id)) {
+
+        confStepSeancesHall[j].lastElementChild.insertAdjacentHTML('beforeend', `
+          <div draggable="true" class="conf-step__seances-movie" data-hallid="${arrr[i].seance_hallid}" data-id="${data.result.films[indFilm].id}">
+          <p class="seances-movie-tittle">${data.result.films[indFilm].film_name}</p>
+          <div class="movie-start" data-id="${arrr[i].id}">${arrr[i].seance_time}</div>
+          </div>`);
+      } 
+    }
+  }//1цикл 
+  
+  let searchClass;
+  const arrAdmFilm = Array.from(document.querySelectorAll(".adm_film"));
+  let movieArr = Array.from(document.querySelectorAll(".conf-step__seances-movie"));
+  
+  //позиционирование сеансов в линии
+  function timeWidth() {
+    hourWidth = confStepSeancesHall[0].getBoundingClientRect().width / 24;
+    minutWidth = hourWidth / 60;
+    for(let i = 0; i < movieArr.length; i++) {
+      //считает ширину фильма в процентах
+      for(let j = 0; j < data.result.films.length; j++) {
+        if(Number(movieArr[i].dataset.id) === data.result.films[j].id) {
+          filmWidth = 100 * (data.result.films[j].film_duration * minutWidth) / Number(confStepSeancesHall[0].getBoundingClientRect().width);
+          movieArr[i].style.width = filmWidth + '%';
+        }
+      }
+      let timesForWidth = movieArr[i].lastElementChild.textContent.split(':', [2]);
+      let hour = Number(timesForWidth[0]); 
+      let minutes = Number(timesForWidth[1]);
+      position = hour * hourWidth + minutes * minutWidth;
+      movieArr[i].style.left = position + "px";
+    }
+  }
+  timeWidth();
+
+  //добав фон фильмам в лене
+  for(let i = 0; i < arrAdmFilm.length; i++) {
+    for(let j = 0; j < movieArr.length; j++) {
+      if(Number(arrAdmFilm[i].dataset.id) === Number(movieArr[j].dataset.id)) {
+        searchClass = arrAdmFilm[i].className.slice(9);
+        movieArr[j].classList.add(searchClass);
+      }
+    }
+  }
+
   //при изменении ширины экрана
   window.addEventListener('resize', (e) => {
     timeWidth();
@@ -87,72 +134,19 @@ function allForSeances(data) {
         }
       }
     }
-  });
-
-  for(let i = 0; i < arrr.length; i++) {
-    let indFilm = data.result.films.findIndex(el => el.id === Number(arrr[i].seance_filmid));
-    for(let j = 0; j < confStepSeancesHall.length; j++) {
-      if(Number(arrr[i].seance_hallid) === Number(confStepSeancesHall[j].dataset.id)) {
-
-        confStepSeancesHall[j].lastElementChild.insertAdjacentHTML('beforeend', `
-          <div draggable="true" class="conf-step__seances-movie" data-id="${data.result.films[indFilm].id}">
-          <p class="seances-movie-tittle">${data.result.films[indFilm].film_name}</p>
-          <div class="movie-start" data-id="${arrr[i].id}">${arrr[i].seance_time}</div>
-          </div>`);
-      } 
-    }
-  }//1цикл 
-  let searchClass;
-  const arrAdmFilm = Array.from(document.querySelectorAll(".adm_film"));
-  const movieArr = Array.from(document.querySelectorAll(".conf-step__seances-movie"));
-
-  //позиционирование сеансов в линии
-  function timeWidth() {
-    hourWidth = confStepSeancesHall[0].getBoundingClientRect().width / 24;
-    minutWidth = hourWidth / 60;
-    for(let i = 0; i < movieArr.length; i++) {
-      //считает ширину фильма в процентах
-      for(let j = 0; j < data.result.films.length; j++) {
-        if(Number(movieArr[i].dataset.id) === data.result.films[j].id) {
-          filmWidth = 100 * (data.result.films[j].film_duration * minutWidth) / Number(confStepSeancesHall[0].getBoundingClientRect().width);
-          movieArr[i].style.width = filmWidth + '%';
-        }
-      }
-
-      let timesForWidth = movieArr[i].lastElementChild.textContent.split(':', [2]);
-      let hour = Number(timesForWidth[0]); 
-      let minutes = Number(timesForWidth[1]);
-      position = hour * hourWidth + minutes * minutWidth;
-      movieArr[i].style.left = position + "px";
-    }
-  }
-  timeWidth();
-         
-  //добав фон фильмам в лене
-  for(let i = 0; i < arrAdmFilm.length; i++) {
-    for(let j = 0; j < movieArr.length; j++) {
-      if(Number(arrAdmFilm[i].dataset.id) === Number(movieArr[j].dataset.id)) {
-        searchClass = arrAdmFilm[i].className.slice(9);
-        movieArr[j].classList.add(searchClass);
-      }
-    }
-  }
-
+  });       
+  
   //добавление сеанса на страницу popup
            
   //выбор зала
   hallNameSeanse.addEventListener('change', (e) => {
-    timeNameSeanse.value = "";
-    resultForTime.length = 0; 
-    arrForTime.length = 0;       
+    timeNameSeanse.value = "";      
     targetHall = Number(e.target.options[e.target.selectedIndex].dataset.id);   
   })
    
   //выбор фильма
   filmNameSeanse.addEventListener('change', (e) => { 
     timeNameSeanse.value = "";
-    resultForTime.length = 0;
-    arrForTime.length = 0;
     targetFilm = Number(e.target.options[e.target.selectedIndex].dataset.id);
     checkedIdfilmName = e.target.options[e.target.selectedIndex].text;
     for(let i = 0; i < data.result.films.length; i++) {
@@ -162,17 +156,19 @@ function allForSeances(data) {
     }
   })
 
+  
   //клик время
-  timeNameSeanse.addEventListener('change', (e) => { 
-    resultForTime.length = 0; 
-    arrForTime.length = 0;  
+  timeNameSeanse.addEventListener('change', (e) => {  
     if(timeNameSeanse.value.length === 5 && timeNameSeanse.value.includes(':')) {
-      //сортируем массив сеансов по времени
-      for(let i = 0; i < data.result.seances.length; i++) {
-        arrSort.push(data.result.seances[i]);
-      }
+      arrSort.length = 0;
+      movieArr.length = 0;
+      movieArr = Array.from(document.querySelectorAll(".conf-step__seances-movie"));
+      //сортируем массив сеансов по времени    
+      for(let i = 0; i < movieArr.length; i++) {
+            arrSort.push(movieArr[i]);
+          } 
       arrSort.sort(function(a, b) {
-        return a.seance_time.replace(':', '') - b.seance_time.replace(':', '');
+        return a.lastElementChild.textContent.replace(':', '') - b.lastElementChild.textContent.replace(':', '');
       });
         
       if(filmNameSeanse.value.trim() && hallNameSeanse.value.trim()) {
@@ -184,12 +180,12 @@ function allForSeances(data) {
         for(let i = 0; i < arrSort.length; i++) { 
           for(j = 0; j < data.result.films.length; j++) {
 
-            if(Number(arrSort[i].seance_hallid) === Number(targetHall)) {//ищем зал
+            if(Number(arrSort[i].dataset.hallid) === Number(targetHall)) {//ищем зал
                              
-              if(Number(arrSort[i].seance_filmid) === Number(data.result.films[j].id)) {//ищем фильм
+              if(Number(arrSort[i].dataset.id) === Number(data.result.films[j].id)) {//ищем фильм
                 searchDuration = Number(data.result.films[j].film_duration) - 1;//продолжительн фильма 
                 //считаем свободное время
-                let hourAndMinutes = arrSort[i].seance_time.split(':', [2]);
+                let hourAndMinutes = arrSort[i].lastElementChild.textContent.split(':', [2]);
                 let inMinutes = Number(hourAndMinutes[0]) * 60 + Number(hourAndMinutes[1]); //нач кажд сеанса                               
                 let searchTime = inMinutes + Number(searchDuration);//конец кажд сеанса
                               
@@ -230,22 +226,13 @@ function allForSeances(data) {
       unblockBtn = 'false';
       return;
     }
+ 
   })
-  let newSeans  ;
+
   //клик добавить сеанс на страницу
   btnAdds.addEventListener('click', (e) => {
     e.preventDefault();
-    if(unblockBtn === 'true'){
-      //доб в массив новый сеанс для учета времени 
-      function NewSeans(targetHall, targetFilm, checkedTime) { 
-        this.id = '00',   
-        this.seance_hallid = `${targetHall}`,      
-        this.seance_filmid = `${targetFilm}`,
-        this.seance_time = `${checkedTime}`   
-    }
-    newSeans = new NewSeans(targetHall, targetFilm, checkedTime);
-    arrSort.push(newSeans);  
-      
+    if(unblockBtn === 'true'){     
         localStorage.setItem('countAdd', 'add');
         localStorage.setItem('targetHall', `${targetHall}`);
         localStorage.setItem('targetFilm', `${targetFilm}`);
@@ -264,57 +251,49 @@ function allForSeances(data) {
   let idCheckedFilm;
   let targetTime;
   let checkHall;
-        
-  function addSeans() {
-    let newEl;
-    idCheckedFilm = localStorage.getItem('targetFilm');
-    let checkedNameFilm = localStorage.getItem('checkedIdfilmName');
-    targetTime = localStorage.getItem('checkedTime');
-    localStorage.removeItem('checkedTime');
-    checkHall = localStorage.getItem('targetHall');
 
-    //разметка для нового сеанса
+  function addNewSeances(a,b,c,d){//checkHall,idCheckedFilm,targetTime,checkedNameFilm
 
     //фон сеансу
     for(let i = 0; i < arrAdmFilm.length; i++) {
-      if(Number(arrAdmFilm[i].dataset.id) === Number(idCheckedFilm)) {
+      if(Number(arrAdmFilm[i].dataset.id) === Number(b)) {//idCheckedFilm
         searchClass = arrAdmFilm[i].className.slice(9);
       }
     }
     //позиционирование
-    let timesForWidth = targetTime.split(':', [2]);
+    let timesForWidth = c.split(':', [2]);
     let hour = Number(timesForWidth[0]); 
     let minutes = Number(timesForWidth[1]);
     let position = hour * hourWidth + minutes * minutWidth;
 
     //считает ширину фильма в процентах
     for(let i = 0; i < data.result.films.length; i++) {
-      if(Number(idCheckedFilm) === data.result.films[i].id) {
+      if(Number(b) === data.result.films[i].id) {//idCheckedFilm
         filmWidth = 100 * (data.result.films[i].film_duration * minutWidth) / Number(confStepSeancesHall[0].getBoundingClientRect().width);
         break;
       }
     }
     let nextElInd;
-          
+    let newEl;   
     for(let i = 0; i < confStepSeancesHall.length; i++) {
-      if(Number(checkHall) === Number(confStepSeancesHall[i].dataset.id)) {
+      if(Number(a) === Number(confStepSeancesHall[i].dataset.id)) {//checkHall
         if(confStepSeancesHall[i].lastElementChild.children.length > 0) {
           for(let j = 0; j < confStepSeancesHall[i].lastElementChild.children.length; j++) {
-            if(confStepSeancesHall[i].lastElementChild.children[j].lastElementChild.textContent.split(':', [1]) > targetTime.split(':', [1])) {
+            if(confStepSeancesHall[i].lastElementChild.children[j].lastElementChild.textContent.split(':', [1]) > c.split(':', [1])) {
               nextElInd = confStepSeancesHall[i].lastElementChild.children[j];//необх инд для нового сеанса
               nextElInd.insertAdjacentHTML('beforebegin', `
-                <div draggable="true" class="conf-step__seances-movie ${searchClass}" data-id="${idCheckedFilm}" style='left: ${position}px; width: ${filmWidth}%'>
-                  <p class="seances-movie-tittle">${checkedNameFilm}</p>
-                  <div class="movie-start" data-id="00">${targetTime}</div>
+                <div draggable="true" class="conf-step__seances-movie ${searchClass}" data-id="${b}" data-hallid="${confStepSeancesHall[i].dataset.id}" style='left: ${position}px; width: ${filmWidth}%'>
+                  <p class="seances-movie-tittle">${d}</p>
+                  <div class="movie-start" data-id="00">${c}</div>
                 </div>`);
               newEl = nextElInd.previousElementSibling;
               break;
               //если проверили все сеансы,добавляет после последнего сеанса     
             } else if(j === confStepSeancesHall[i].lastElementChild.children.length - 1) {
               confStepSeancesHall[i].lastElementChild.children[j].insertAdjacentHTML('afterend', `
-                <div draggable="true" class="conf-step__seances-movie ${searchClass}" data-id="${idCheckedFilm}" style='left: ${position}px; width: ${filmWidth}%'>
-                <p class="seances-movie-tittle">${checkedNameFilm}</p>
-                <div class="movie-start" data-id="00">${targetTime}</div>
+                <div draggable="true" class="conf-step__seances-movie ${searchClass}" data-id="${b}" data-hallid="${confStepSeancesHall[i].dataset.id}" style='left: ${position}px; width: ${filmWidth}%'>
+                <p class="seances-movie-tittle">${d}</p>
+                <div class="movie-start" data-id="00">${c}</div>
                 </div>`);
               newEl = confStepSeancesHall[i].lastElementChild.children[j].nextElementSibling;
                 break;
@@ -322,33 +301,44 @@ function allForSeances(data) {
           }
         } else {//если зал пустой
           confStepSeancesHall[i].lastElementChild.insertAdjacentHTML('beforeend', `
-            <div draggable="true" class="conf-step__seances-movie ${searchClass}" data-id="${idCheckedFilm}" style='left: ${position}px; width: ${filmWidth}%'>
-            <p class="seances-movie-tittle">${checkedNameFilm}</p>
-            <div class="movie-start" data-id="00">${targetTime}</div>
+            <div draggable="true" class="conf-step__seances-movie ${searchClass}" data-id="${b}" data-hallid="${confStepSeancesHall[i].dataset.id}" style='left: ${position}px; width: ${filmWidth}%'>
+            <p class="seances-movie-tittle">${d}</p>
+            <div class="movie-start" data-id="00">${c}</div>
             </div>`);
           newEl = confStepSeancesHall[i].lastElementChild.firstElementChild;
         }
+        movieArr.push(newEl); 
              
         //перетаскивание для нов сеанса         
         newEl.addEventListener('dragstart', () => {          
           hiddenDelete.classList.add("show"); 
           activeEl = newEl;
           nameFilmLine = newEl.firstElementChild.textContent;
-          seanceId = newEl.dataset.id;
+          seanceId = newEl.lastElementChild.dataset.id;
           localStorage.setItem('name', nameFilmLine);
         })
         hiddenDelete.addEventListener('dragover', (evt) => {
           evt.preventDefault();         
-        }) 
-        
+        })      
         hiddenDelete.addEventListener('drop', (evt) => {
           evt.preventDefault();
           hiddenDelete.classList.remove("show");
           deleteSeances.classList.add("container__popup_active");
           labelFilm.textContent = nameFilmLine;
         })
-      }   
-    } 
+      }
+    }
+  } 
+        
+  function addSeans() { 
+    idCheckedFilm = localStorage.getItem('targetFilm');
+    let checkedNameFilm = localStorage.getItem('checkedIdfilmName');
+    targetTime = localStorage.getItem('checkedTime');
+    localStorage.removeItem('checkedTime');
+    checkHall = localStorage.getItem('targetHall');
+
+    //разметка для нового сеанса
+    addNewSeances(checkHall,idCheckedFilm,targetTime,checkedNameFilm);
   }//фун
          
   //клик по отмене popup доб сеанса
@@ -359,8 +349,6 @@ function allForSeances(data) {
     hallNameSeanse.length = 0;
     filmNameSeanse.length = 0;
     timeNameSeanse.value = "";  
-    resultForTime.length = 0;
-    arrForTime.length = 0;
     countOfTime = 0;
     contSeans.classList.remove("container__popup_active");
     body.classList.remove('hidden');
@@ -372,8 +360,6 @@ function allForSeances(data) {
     hallNameSeanse.length = 0;
     filmNameSeanse.length = 0;
     timeNameSeanse.value = "";  
-    resultForTime.length = 0;
-    arrForTime.length = 0;
     countOfTime = 0;
     contSeans.classList.remove("container__popup_active");
     body.classList.remove('hidden');
@@ -403,6 +389,8 @@ function allForSeances(data) {
       targetHall = evt.target.closest('.conf-step__seances-hall').dataset.id;         
       containerSeans.classList.add("container__popup_active");
       body.classList.add('hidden');
+      btnFilmSeanseSave.removeAttribute('disabled');
+      deleteFilmSeanse.removeAttribute('disabled');
       //формируем разметку select фильмов
       for(let j = 0; j < data.result.films.length; j++) {
         filmNameSeanse.insertAdjacentHTML('beforeend', `<option class="option_addseans name_of_film" data-id="${data.result.films[j].id}">${data.result.films[j].film_name}</option>`);
@@ -425,27 +413,32 @@ function allForSeances(data) {
   //удал сеанса со страницы
   let nameFilmLine;
   let activeEl;
-  for(let i = 0; i < movieArr.length; i++){    
-    movieArr[i].addEventListener('dragstart', () => {        
+  for(let i = 0; i < movieArr.length; i++){ 
+    movieArr[i].addEventListener('dragstart', () => {   
+      console.log(movieArr[i].firstElementChild.textContent);     
       hiddenDelete.classList.add("show"); 
       activeEl = movieArr[i];
       nameFilmLine = movieArr[i].firstElementChild.textContent;
-      seanceId = movieArr[i].dataset.id;
+      seanceId = movieArr[i].lastElementChild.dataset.id;
       localStorage.setItem('name', nameFilmLine); 
     })     
-  }//цикл
-      
+  }//цикл  
   hiddenDelete.addEventListener('dragover', (evt) => {
     evt.preventDefault();         
   }) 
-
+  
   hiddenDelete.addEventListener('drop', (evt) => {
     evt.preventDefault();
     hiddenDelete.classList.remove("show");
     deleteSeances.classList.add("container__popup_active");
     body.classList.add('hidden');
-    labelFilm.textContent = nameFilmLine;      
+    labelFilm.textContent = nameFilmLine;   
+    btnFilmSeanseSave.removeAttribute('disabled');
+    deleteFilmSeanse.removeAttribute('disabled');
+    localStorage.removeItem('name');     
   })
+  
+
   //клик по крестику в удал сеанса
   closeDelSeans.addEventListener("click", () => {
     containerDelSeans.classList.remove("container__popup_active");
@@ -454,11 +447,12 @@ function allForSeances(data) {
   })
 
   //клик по удалить в удалении сеанса
-  delSeans.addEventListener('click', () => {       
+  delSeans.addEventListener('click', () => {    
     containerDelSeans.classList.remove("container__popup_active");
     body.classList.remove('hidden');
-    activeEl.remove();
-    localStorage.removeItem('name');   
+    movieArr.length = 0;
+    movieArr = Array.from(document.querySelectorAll(".conf-step__seances-movie"));
+    activeEl.remove(); 
   }) 
      
   //клик по отмене в удал сеанса
@@ -466,13 +460,16 @@ function allForSeances(data) {
     containerDelSeans.classList.remove("container__popup_active");
     body.classList.remove('hidden');
   })
-
+  
+ 
 
   //КЛИК ПО СОХРАНИТЬ СЕАНСЫ НА ОСНОВНОЙ СТРАНИЦЕ
 
   //добавление сеанса в систему
   btnFilmSeanseSave.addEventListener('click', (e) => {
     e.preventDefault();
+    btnFilmSeanseSave.setAttribute('disabled', '');
+    deleteFilmSeanse.setAttribute('disabled', ''); 
     const movieArr = Array.from(document.querySelectorAll(".conf-step__seances-movie"));
     for(let i = 0; i < movieArr.length; i++) {
       if(movieArr[i].lastElementChild.dataset.id === '00') {
@@ -502,8 +499,61 @@ function allForSeances(data) {
 
   //клик по отмене сеансов
   deleteFilmSeanse.addEventListener('click', () => {
-    controller.abort();
-    console.log('Download aborted');
+    
+    btnFilmSeanseSave.setAttribute('disabled', '');
+    deleteFilmSeanse.setAttribute('disabled', ''); 
+    arrSort.length = 0;
+    for(let i = 0; i < confStepSeancesTimeLine.length; i++) {
+        confStepSeancesTimeLine[i].innerHTML = '';
+    } 
+    for(let i = 0; i < arrr.length; i++) {
+      let indFilm = data.result.films.findIndex(el => el.id === Number(arrr[i].seance_filmid));
+      for(let j = 0; j < confStepSeancesHall.length; j++) {
+        if(Number(arrr[i].seance_hallid) === Number(confStepSeancesHall[j].dataset.id)) {
+          confStepSeancesHall[j].lastElementChild.insertAdjacentHTML('beforeend', `
+            <div draggable="true" class="conf-step__seances-movie" data-hallid="${arrr[i].seance_hallid}" data-id="${data.result.films[indFilm].id}">
+            <p class="seances-movie-tittle">${data.result.films[indFilm].film_name}</p>
+            <div class="movie-start" data-id="${arrr[i].id}">${arrr[i].seance_time}</div>
+            </div>`);
+        } 
+      }
+    }//1цикл 
+    let movieArr = Array.from(document.querySelectorAll(".conf-step__seances-movie"));
+    hourWidth = confStepSeancesHall[0].getBoundingClientRect().width / 24;
+    minutWidth = hourWidth / 60;
+    for(let i = 0; i < movieArr.length; i++) {
+      //считает ширину фильма в процентах
+      for(let j = 0; j < data.result.films.length; j++) {
+        if(Number(movieArr[i].dataset.id) === data.result.films[j].id) {
+          filmWidth = 100 * (data.result.films[j].film_duration * minutWidth) / Number(confStepSeancesHall[0].getBoundingClientRect().width);
+          movieArr[i].style.width = filmWidth + '%';
+        }
+      }
+      let timesForWidth = movieArr[i].lastElementChild.textContent.split(':', [2]);
+      let hour = Number(timesForWidth[0]); 
+      let minutes = Number(timesForWidth[1]);
+      position = hour * hourWidth + minutes * minutWidth;
+      movieArr[i].style.left = position + "px";
+    }
+    for(let i = 0; i < arrAdmFilm.length; i++) {
+      for(let j = 0; j < movieArr.length; j++) {
+        if(Number(arrAdmFilm[i].dataset.id) === Number(movieArr[j].dataset.id)) {
+          searchClass = arrAdmFilm[i].className.slice(9);
+          movieArr[j].classList.add(searchClass);
+        }
+      }
+    }
+    for(let i = 0; i < movieArr.length; i++){
+      movieArr[i].addEventListener('dragstart', () => {        
+        hiddenDelete.classList.add("show"); 
+        activeEl = movieArr[i];
+        nameFilmLine = movieArr[i].firstElementChild.textContent;
+        seanceId = movieArr[i].lastElementChild.dataset.id;
+        localStorage.setItem('name', nameFilmLine); 
+        console.log('start');  
+      })     
+    }//цикл  
+    //клик время
+    
   })
-  
 }//ф-я

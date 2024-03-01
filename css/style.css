@@ -670,7 +670,7 @@ body {
 
 .ticket__info-wrapper::before {
   content: "";
-  background: url(../images/__before2.png);
+  background: url(../images/before2.png);
   width: 100%;
   height: 3px;
   position: absolute;
@@ -680,7 +680,7 @@ body {
 
 .ticket__info-wrapper::after {
   content: "";
-  background: url(../images/__after2.png);
+  background: url(../images/after2.png);
   width: 100%;
   height: 3px;
   position: absolute;
@@ -1093,7 +1093,7 @@ body {
 
 .qr {
   width: 200px;
-  height: 200px;
+  height: 195px;
   flex-shrink: 0;
   margin: 30px auto;
   display: block;
@@ -1764,7 +1764,7 @@ body {
   display: flex;
   box-sizing: border-box;
   height: 40px;
-  padding: 10px;
+  padding: 9px;
   flex-direction: column;
   align-items: flex-start;
   border: 1px solid rgba(0, 0, 0, 0.30);

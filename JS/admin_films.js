@@ -98,8 +98,7 @@ function allForFilms(data) {
   btnCancel.addEventListener('click', (e) => {
     e.preventDefault();
     formAddfilm.reset();
-    controller.abort();
-    console.log('Download aborted');
+    //controller.abort();
     filmContainer.classList.remove("container__popup_active");
     body.classList.remove('hidden');
   }) 

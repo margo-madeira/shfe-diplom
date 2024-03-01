@@ -1,6 +1,7 @@
 const qr = document.querySelector('.qr');
 let checkedSeans = localStorage.getItem('checkedSeans');
 let tickets = JSON.parse(localStorage.getItem('tickets'));
+let ticketsClient = JSON.parse(localStorage.getItem('ticketsClient'));
 let checkedDate = localStorage.getItem('checkedDate');
 let searchMonth = localStorage.getItem('searchMonth');
 let searchPrice = localStorage.getItem('searchPrice');
@@ -25,35 +26,24 @@ fetch( 'https://shfe-diplom.neto-server.ru/alldata' )
     time.textContent = `${data.result.seances[indSeans].seance_time}`;
     let findHallId = data.result.halls.findIndex(el => data.result.seances[indSeans].seance_hallid === el.id);
     hall.textContent = data.result.halls[ findHallId].hall_name;
-    for(let i = 0; i < tickets.length; i++) {
-        let searchPlaces = tickets[i].place;
-        let numbOfRows = tickets[i].row;
-        arrOfRow.push(numbOfRows);
-        if((i + 1) < tickets.length) {
-          placeInHeader.textContent += Array.from(searchPlaces) + ',';
-        } else if((i + 1) === tickets.length) {
-          placeInHeader.textContent += Array.from(searchPlaces);
-        }
-    }
-    let alldata =  {
-        дата: `${checkedDate}-${searchMonth}-${year}`,
-        время: `${time.textContent}`,
-        фильм: `${filmName.textContent}`,
-        зал: `${hall.textContent}`,
-        ряд: `${arrOfRow.join(",")}`,
-        место: `${placeInHeader.textContent}`, 
-        стоимость: `${searchPrice}`
+    for(let i = 0; i < ticketsClient.length; i++) {
+      let searchPlaces = ticketsClient[i];
+      if((i + 1) < ticketsClient.length) {
+        placeInHeader.textContent += searchPlaces + ', ';
+      } else if((i + 1) === ticketsClient.length) {
+        placeInHeader.textContent += searchPlaces;
+      }
     }
     
     //заносит цену и данные для кодирования
-    const qrcode = QRCreator(`${alldata}`, 
-    {mode: 4,
+    const qrcode = QRCreator(`дата:${checkedDate}-${searchMonth}-${year},время:${time.textContent},фильм:${filmName.textContent},зал:${hall.textContent},ряд/место: ${placeInHeader.textContent},стоимость: ${searchPrice},Билет действителен строго на свой сеанс`,    
+    {mode: -1,
       eccl: 0,
-      version: 3,
+      version: -1,
       mask: -1,
       image: 'html',
-      modsize: 7,
-      margin: 0}
+      modsize: 3,
+      margin: 2}
       );
     const content = (qrcode) =>{
         return qrcode.error ?
