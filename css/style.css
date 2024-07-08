@@ -1092,14 +1092,11 @@ body {
 }
 
 .qr {
-  width: 200px;
-  height: 195px;
   flex-shrink: 0;
   margin: 30px auto;
   display: block;
   background: lightgray 0px 0px / 100% 100% no-repeat;
 }
-
 
 
 

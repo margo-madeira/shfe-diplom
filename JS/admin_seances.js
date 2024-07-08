@@ -163,6 +163,15 @@ function allForSeances(data) {
       arrSort.length = 0;
       movieArr.length = 0;
       movieArr = Array.from(document.querySelectorAll(".conf-step__seances-movie"));
+
+
+
+      if(movieArr.length === 0) {
+        checkedTime = timeNameSeanse.value;
+                unblockBtn = 'true';
+      } else {
+      
+
       //сортируем массив сеансов по времени    
       for(let i = 0; i < movieArr.length; i++) {
             arrSort.push(movieArr[i]);
@@ -221,12 +230,13 @@ function allForSeances(data) {
           }//внутр цикл
         }//внеш цикл
       }
+    }
     } else {
       alert('не корректное значение!');
       unblockBtn = 'false';
       return;
     }
- 
+  
   })
 
   //клик добавить сеанс на страницу
